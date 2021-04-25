@@ -6,5 +6,5 @@ public class Playlist {
 	
 	public Song[] playlist;
 	
-	public int runtime;
+	public int runtimeTotal;
 }
