@@ -15,23 +15,36 @@ public class Main extends Application {
 	
 	private Node navigationBar;
 	
+	private BorderPane root;
+	
 	private Button browseButton;
 	private Button libraryButton;
 	private Button searchButton;
 	private Button settingsButton;
+	
+	private Node browsePane;
+	private Node libraryPane;
+	private Node searchPane;
+	private Node settingsPane;
+	
+	private Playlist[] playlistList;
 	
 	private EventHandler<ActionEvent> actionHandler;
 	
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			BorderPane root = new BorderPane();
+			
+			libraryPane = (new LibraryPane()).buildLibraryPane(playlistList);
+			
+			root = new BorderPane();
 			
 			actionHandler = new ActionHandler();
 			
 			navigationBar = buildMenuBar();
 			
 			root.setBottom(navigationBar);
+			root.setCenter(browsePane);
 			
 			Scene scene = new Scene(root,500,800);
 			//scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm()); //Marked out since "application.css" wasn't present, thus causing a Null Pointer Exception.
@@ -88,6 +101,8 @@ public class Main extends Application {
 			}
 			else if (source == libraryButton) {
 				System.out.println("User selected: Library");
+				
+				root.setCenter(libraryPane);
 			}
 			else if (source == searchButton) {
 				System.out.println("User selected: Search");
