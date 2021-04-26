@@ -47,16 +47,7 @@ public Node buildSearchPane() {
 		top.setAlignment(Pos.CENTER);
 		top.setMaxSize(500, 100);
 		top.setMinSize(500, 100);
-		
-		ScrollPane searchResults = new ScrollPane();
-		searchResults.setVbarPolicy(ScrollBarPolicy.ALWAYS);
-		searchResults.setPrefViewportHeight(600);
-		searchResults.setPrefViewportWidth(450);
-		searchResults.setMaxSize(450, 600);
-		searchResults.setMinSize(450, 600);
-		searchResults.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-		
-		
+			
 		BorderPane searchPane = new BorderPane();
 		
 		searchPane.setPrefSize(500, 725);
@@ -72,18 +63,21 @@ public Node buildSearchPane() {
 	public TableView<Song> buildTable() {
 	
 		TableView<Song> table = new TableView<Song>();
+		table.setMaxSize(450.0, 600.0);
+		table.setPrefSize(450.0, 600.0);
 		
 		TableColumn songCol = new TableColumn("Song");
-		songCol.setMinWidth(500/3);
+		songCol.setMinWidth(450.0/3.0);
         
 
         TableColumn artistCol = new TableColumn("Artist");
-        artistCol.setMinWidth(500/3);
+        artistCol.setMinWidth(450.0/3.0);
 
         TableColumn albumCol = new TableColumn("Album");
-        albumCol.setMinWidth(500/3);
+        albumCol.setMinWidth(450.0/3.0);
         
         table.getColumns().addAll(songCol, artistCol, albumCol);
+        table.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
 		
 		return table;
 	}
