@@ -42,6 +42,7 @@ public class Main extends Application {
 			buildAddButtonAndPane();
 	
 			libraryPane = (new LibraryPane()).buildLibraryPane(playlistList, addPlayListButton);
+			searchPane = (new SearchPane()).buildSearchPane();
 			
 			root = new BorderPane();
 			
