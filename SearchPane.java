@@ -6,6 +6,8 @@ import javafx.scene.control.Button;
 import javafx.scene.control.Label;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.control.TableColumn;
+import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
@@ -54,6 +56,7 @@ public Node buildSearchPane() {
 		searchResults.setMinSize(450, 600);
 		searchResults.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
 		
+		
 		BorderPane searchPane = new BorderPane();
 		
 		searchPane.setPrefSize(500, 725);
@@ -61,8 +64,27 @@ public Node buildSearchPane() {
 		searchPane.setMaxSize(500, 725);
 		
 		searchPane.setTop(top);
-		searchPane.setCenter(searchResults);
+		searchPane.setCenter(buildTable());
 		
 		return searchPane;	
+	}
+
+	public TableView<Song> buildTable() {
+	
+		TableView<Song> table = new TableView<Song>();
+		
+		TableColumn songCol = new TableColumn("Song");
+		songCol.setMinWidth(500/3);
+        
+
+        TableColumn artistCol = new TableColumn("Artist");
+        artistCol.setMinWidth(500/3);
+
+        TableColumn albumCol = new TableColumn("Album");
+        albumCol.setMinWidth(500/3);
+        
+        table.getColumns().addAll(songCol, artistCol, albumCol);
+		
+		return table;
 	}
 }
