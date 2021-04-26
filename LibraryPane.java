@@ -9,24 +9,37 @@ import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.text.Font;
 import javafx.scene.paint.Color;
-
+import javafx.scene.control.Button;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.layout.HBox;
 
 public class LibraryPane {
 
 	private Label libraryLabel;
 	
-	public Node buildLibraryPane(Playlist[] list) {
+	public Node buildLibraryPane(Playlist[] list, Button button) {
+		
+		//actionHandler = new ActionHandler();
 		
 		libraryLabel = new Label("Your Library");
 		libraryLabel.setFont(new Font("arial", 32));
-		libraryLabel.setPrefSize(500, 75);
-		libraryLabel.setMinSize(500, 75);
-		libraryLabel.setMaxSize(500, 75);
+		libraryLabel.setPrefSize(400, 75);
+		libraryLabel.setMinSize(400, 75);
+		libraryLabel.setMaxSize(400, 75);
 		libraryLabel.setAlignment(Pos.CENTER);
+		
+		HBox topComponents = new HBox();
+		
+		topComponents.getChildren().add(libraryLabel);
+		topComponents.getChildren().add(button);
+		topComponents.setAlignment(Pos.CENTER);
+		topComponents.setMaxSize(500, 100);
+		topComponents.setMinSize(500, 100);
 		
 		ScrollPane playlistList = new ScrollPane();
 		playlistList.setVbarPolicy(ScrollBarPolicy.ALWAYS);
@@ -42,10 +55,10 @@ public class LibraryPane {
 		libraryPane.setMinSize(500, 725);
 		libraryPane.setMaxSize(500, 725);
 		
-		libraryPane.setTop(libraryLabel);
+		libraryPane.setTop(topComponents);
 		libraryPane.setCenter(playlistList);
 		
 		return libraryPane;	
 	}
-	
+
 }
