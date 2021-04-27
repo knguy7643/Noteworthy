@@ -10,8 +10,6 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.text.Font;
 import javafx.scene.paint.Color;
 import javafx.scene.control.Button;
-import javafx.event.ActionEvent;
-import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.ScrollPane;

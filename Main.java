@@ -11,38 +11,54 @@ import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.Button;
 import javafx.scene.text.Font;
+import javafx.scene.control.Label;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
+import javafx.scene.paint.Color;
+import javafx.scene.control.ScrollPane;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 
 public class Main extends Application {
 	
-	private Node navigationBar;
-	
 	private BorderPane root;
 	
-	private Button browseButton;
-	private Button libraryButton;
-	private Button searchButton;
-	private Button settingsButton;
-	private Button addPlayListButton;
-	
+	// Private variables for each of the different panes.
 	private Node browsePane;
 	private Node libraryPane;
 	private Node searchPane;
 	private Node settingsPane;
 	private Node newPlaylistPane;
 	
+	// Private variables for the navigation bar.
+	private Node navigationBar;
+	private Button browseButton;
+	private Button libraryButton;
+	private Button searchButton;
+	private Button settingsButton;
+	
+	// Private variables for the Library Pane
+	private Button addPlayListButton;
+	private Label libraryLabel;
+	
+	// TODO: Add other neededs variables. Delete uneeded variables. 
 	private Playlist[] playlistList;
 	
+	// Action Handler to deal with the user's inputs. 
 	private EventHandler<ActionEvent> actionHandler;
 	
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			actionHandler = new ActionHandler();
+			playlistList = loadPlayList("playlist.txt");
 			
-			buildAddButtonAndPane();
+			actionHandler = new ActionHandler();
 	
-			libraryPane = (new LibraryPane()).buildLibraryPane(playlistList, addPlayListButton);
+			libraryPane = buildLibraryPane();
 			searchPane = (new SearchPane()).buildSearchPane();
+			settingsPane = (new SettingsPane()).buildSettingsPane();
 			
 			root = new BorderPane();
 			
@@ -103,13 +119,47 @@ public class Main extends Application {
 		return menuBar;
 	}
 	
-	public void buildAddButtonAndPane() {
+	public Node buildLibraryPane() {
+		libraryLabel = new Label("Your Library");
+		libraryLabel.setFont(new Font("arial", 32));
+		libraryLabel.setPrefSize(400, 75);
+		libraryLabel.setMinSize(400, 75);
+		libraryLabel.setMaxSize(400, 75);
+		libraryLabel.setAlignment(Pos.CENTER);
+		
 		addPlayListButton = new Button("+");
 		addPlayListButton.setFont(new Font(15));
 		addPlayListButton.setMinSize(40, 40);
 		addPlayListButton.setMaxSize(40, 40);
 		addPlayListButton.setAlignment(Pos.CENTER);
 		addPlayListButton.setOnAction(actionHandler);
+		
+		HBox topComponents = new HBox();
+		
+		topComponents.getChildren().add(libraryLabel);
+		topComponents.getChildren().add(addPlayListButton);
+		topComponents.setAlignment(Pos.CENTER);
+		topComponents.setMaxSize(500, 100);
+		topComponents.setMinSize(500, 100);
+		
+		ScrollPane playlistList = new ScrollPane();
+		playlistList.setVbarPolicy(ScrollBarPolicy.ALWAYS);
+		playlistList.setPrefViewportHeight(600);
+		playlistList.setPrefViewportWidth(450);
+		playlistList.setMaxSize(450, 600);
+		playlistList.setMinSize(450, 600);
+		playlistList.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+		
+		BorderPane libraryPane = new BorderPane();
+		
+		libraryPane.setPrefSize(500, 725);
+		libraryPane.setMinSize(500, 725);
+		libraryPane.setMaxSize(500, 725);
+		
+		libraryPane.setTop(topComponents);
+		libraryPane.setCenter(playlistList);
+		
+		return libraryPane;	
 	}
 	
 	private final class ActionHandler implements EventHandler<ActionEvent> {
@@ -133,7 +183,7 @@ public class Main extends Application {
 			}
 			else if (source == settingsButton) {
 				System.out.println("User selected: Settings");
-				settingsPane = (new SettingsPane()).buildSettingsPane();
+				
 				root.setCenter(settingsPane);
 			}
 			else if (source == addPlayListButton) {
@@ -143,6 +193,10 @@ public class Main extends Application {
 			}
 			
 		}
+	}
+	
+	public Playlist[] loadPlayList(String filename) {
+		return null;
 	}
 	
 }

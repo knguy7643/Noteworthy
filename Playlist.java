@@ -14,38 +14,4 @@ public class Playlist {
 		this.playlist = playlist;
 		this.runtimeTotal = runtimeTotal;
 	}
-
-	//Getters
-	public String getName() {
-		
-		return name;
-	}
-
-	public Song[] getPlaylist() {
-		
-		return playlist;
-	}
-
-	public int getRuntimeTotal() {
-		
-		return runtimeTotal;
-	}
-
-	// Setters
-	public void setName(String name) {
-		
-		this.name = name;
-	}
-
-	public void setPlaylist(Song[] playlist) {
-		
-		this.playlist = playlist;
-	}
-
-	public void setRuntimeTotal(int runtimeTotal) {
-		
-		this.runtimeTotal = runtimeTotal;
-	}
-	
-	
 }
