@@ -1,8 +1,12 @@
 package application;
 	
+import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 
@@ -50,7 +54,7 @@ public class Main extends Application {
 	private Label libraryLabel;
 	
 	// TODO: Add other neededs variables. Delete uneeded variables. 
-	private ArrayList playlistList;
+	private ArrayList<Playlist> playlistList;
 	
 	// Action Handler to deal with the user's inputs. 
 	private EventHandler<ActionEvent> actionHandler;
@@ -193,29 +197,97 @@ public class Main extends Application {
 				root.setCenter(settingsPane);
 			}
 			else if (source == addPlayListButton) {
-				System.out.println("Open create playlsit pane.");
+				System.out.println("Open create playlist pane.");
 				
-				root.setCenter(newPlaylistPane);
+				Song song = new Song("Pretty Savage", "Blackpink", 180, "K-Pop", "BP-LoveSickGirl-Image.png", "NA.png");
+				
+				playlistList.get(0).addSong(song);
+				
+				try {
+					savePlayList("playlist.txt");
+				} catch (IOException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+				//root.setCenter(newPlaylistPane);
 			}
 			
 		}
 	}
 	
-	public ArrayList loadPlayList(String filename) throws IOException {
+	public ArrayList<Playlist> loadPlayList(String filename) throws IOException {
 		
-		ArrayList playlist = new ArrayList();
+		ArrayList<Playlist> playlistList = new ArrayList();
 		
 		BufferedReader input = new BufferedReader(new FileReader(filename));
+		
+		Playlist playlist;
 		
 		int numPlaylist = Integer.parseInt(input.readLine());
 		
 		for (int i = 0; i < numPlaylist; i++) {
+			String plName = input.readLine();
+
+			playlist = new Playlist();
+			
+			String songStringFormat = input.readLine();
+			
+			boolean run = true;
+			
+			if (songStringFormat.equalsIgnoreCase("/")) {
+				run = false;
+			}
+			
+			while (run == true) {
+				
+				String[] songInfo = songStringFormat.split("/");
+				
+				Song song = new Song(songInfo[0], songInfo[1], Integer.parseInt(songInfo[2]), songInfo[3], songInfo[4], songInfo[5]);
+				
+				playlist.addSong(song);
+				
+				songStringFormat = input.readLine();
+				
+				if (songStringFormat.equalsIgnoreCase("/")) {
+					run = false;
+				}
+				
+			}
+			
+			playlistList.add(playlist);
 			
 		}
 		
 		input.close();
 		
-		return playlist;
+		return playlistList;
+	}
+	
+	public void savePlayList(String filename) throws IOException {
+		BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
+		
+		File file = new File(filename);
+		
+		if (!file.exists()) {
+			file.createNewFile();
+		}
+		
+		writer.write(Integer.toString(playlistList.size()));
+		writer.newLine();
+	
+		for (int i = 0; i < playlistList.size(); i++) {
+			
+			for (int j = 0; j < playlistList.get(i).size(); j++) {
+				Song song = playlistList.get(i).getSong(j);
+				
+				writer.write(song.getName() + "/" + song.getArtist() + "/" + Integer.toString(song.getRuntime()) + "/" + song.getGenre() + "/" + song.getAlbum() + "/" + song.getSheetMusic());
+				writer.newLine();
+			}
+			writer.write("/");
+			writer.newLine();
+		}
+		
 	}
 	
 }
