@@ -9,7 +9,7 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-
+import javafx.scene.layout.StackPane;
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -30,6 +30,7 @@ import javafx.scene.layout.CornerRadii;
 import javafx.scene.paint.Color;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.control.TextField;
 
 public class Main extends Application {
 	
@@ -52,12 +53,17 @@ public class Main extends Application {
 	// Private variables for the Library Pane
 	private Button addPlayListButton;
 	private Label libraryLabel;
+	private Button newPLSubmit;
+	private Label newPLLabel;
+	private TextField newPLTextfield;
+	
+	// Action Handler to deal with the user's inputs. 
+	private EventHandler<ActionEvent> actionHandler;
 	
 	// TODO: Add other neededs variables. Delete uneeded variables. 
 	private ArrayList<Playlist> playlistList;
 	
-	// Action Handler to deal with the user's inputs. 
-	private EventHandler<ActionEvent> actionHandler;
+// Methods Below. 
 	
 	@Override
 	public void start(Stage primaryStage) {
@@ -69,6 +75,7 @@ public class Main extends Application {
 			libraryPane = buildLibraryPane();
 			searchPane = (new SearchPane()).buildSearchPane();
 			settingsPane = (new SettingsPane()).buildSettingsPane();
+			newPlaylistPane = buildNewPLPane();
 			
 			root = new BorderPane();
 			
@@ -172,6 +179,19 @@ public class Main extends Application {
 		return libraryPane;	
 	}
 	
+	public Node buildNewPLPane() {
+		StackPane newPlaylistPane = new StackPane();
+		
+		newPLSubmit = new Button("Submit");
+		newPLSubmit.setFont(new Font(15));
+		newPLLabel = new Label("Create A New Playlist");
+		newPLLabel.setFont(new Font(30));
+		
+		newPlaylistPane.getChildren().add(newPLLabel);
+		
+		return newPlaylistPane;
+	}
+	
 	private final class ActionHandler implements EventHandler<ActionEvent> {
 		public void handle(ActionEvent e) {
 			Object source = e.getSource();
@@ -199,18 +219,7 @@ public class Main extends Application {
 			else if (source == addPlayListButton) {
 				System.out.println("Open create playlist pane.");
 				
-				Song song = new Song("Pretty Savage", "Blackpink", 180, "K-Pop", "BP-LoveSickGirl-Image.png", "NA.png");
-				
-				playlistList.get(0).addSong(song);
-				
-				try {
-					savePlayList("playlist.txt");
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				}
-				
-				//root.setCenter(newPlaylistPane);
+				root.setCenter(newPlaylistPane);
 			}
 			
 		}
