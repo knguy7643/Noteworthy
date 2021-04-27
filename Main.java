@@ -230,6 +230,7 @@ public class Main extends Application {
 			String plName = input.readLine();
 
 			playlist = new Playlist();
+			playlist.setName(plName);
 			
 			String songStringFormat = input.readLine();
 			
@@ -267,16 +268,13 @@ public class Main extends Application {
 	public void savePlayList(String filename) throws IOException {
 		BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
 		
-		File file = new File(filename);
-		
-		if (!file.exists()) {
-			file.createNewFile();
-		}
-		
 		writer.write(Integer.toString(playlistList.size()));
 		writer.newLine();
 	
 		for (int i = 0; i < playlistList.size(); i++) {
+			
+			writer.write(playlistList.get(i).getPLName());
+			writer.newLine();
 			
 			for (int j = 0; j < playlistList.get(i).size(); j++) {
 				Song song = playlistList.get(i).getSong(j);
@@ -287,6 +285,8 @@ public class Main extends Application {
 			writer.write("/");
 			writer.newLine();
 		}
+		
+		writer.close();
 		
 	}
 	

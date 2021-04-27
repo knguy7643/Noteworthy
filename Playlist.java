@@ -32,6 +32,10 @@ public class Playlist {
 		runtimeTotal = runtimeTotal + song.getRuntime();
 	}
 	
+	public String getPLName() {
+		return name;
+	}
+	
 	public Song getSong(int i) {
 		return playlist.get(i);
 	}
