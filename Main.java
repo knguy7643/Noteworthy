@@ -1,5 +1,11 @@
 package application;
 	
+import java.io.BufferedReader;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.ArrayList;
+
 import javafx.application.Application;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
@@ -44,7 +50,7 @@ public class Main extends Application {
 	private Label libraryLabel;
 	
 	// TODO: Add other neededs variables. Delete uneeded variables. 
-	private Playlist[] playlistList;
+	private ArrayList playlistList;
 	
 	// Action Handler to deal with the user's inputs. 
 	private EventHandler<ActionEvent> actionHandler;
@@ -195,8 +201,21 @@ public class Main extends Application {
 		}
 	}
 	
-	public Playlist[] loadPlayList(String filename) {
-		return null;
+	public ArrayList loadPlayList(String filename) throws IOException {
+		
+		ArrayList playlist = new ArrayList();
+		
+		BufferedReader input = new BufferedReader(new FileReader(filename));
+		
+		int numPlaylist = Integer.parseInt(input.readLine());
+		
+		for (int i = 0; i < numPlaylist; i++) {
+			
+		}
+		
+		input.close();
+		
+		return playlist;
 	}
 	
 }
