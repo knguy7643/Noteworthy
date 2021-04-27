@@ -12,81 +12,80 @@ public class Song {
 	
 	public String genre;
 	
-	public Image album;
+	public String albumImageFileName;
 	
-	public Image sheetMusic;
+	public String sheetMusicFileName;
 	
 	
 	// Constructor
-	public Song(String name, String artist, int runtime, String genre, Image album, Image sheetMusic) {
+	public Song(String name, String artist, int runtime, String genre, String album, String sheetMusic) {
 		
 		this.name = name;
 		this.artist = artist;
 		this.genre = genre;
-		this.album = album;
-		this.sheetMusic = sheetMusic;
-	}
-
-
-	// Getters
-	public String getName() {
-		return name;
-	}
-
-
-	public String getArtist() {
-		return artist;
-	}
-
-
-	public int getRuntime() {
-		return runtime;
-	}
-
-
-	public String getGenre() {
-		return genre;
-	}
-
-
-	public Image getAlbum() {
-		return album;
-	}
-
-
-	public Image getSheetMusic() {
-		return sheetMusic;
-	}
-
-	// Setters
-	public void setName(String name) {
-		this.name = name;
-	}
-
-
-	public void setArtist(String artist) {
-		this.artist = artist;
-	}
-
-
-	public void setRuntime(int runtime) {
-		this.runtime = runtime;
-	}
-
-
-	public void setGenre(String genre) {
-		this.genre = genre;
-	}
-
-
-	public void setAlbum(Image album) {
-		this.album = album;
-	}
-
-
-	public void setSheetMusic(Image sheetMusic) {
-		this.sheetMusic = sheetMusic;
+		this.albumImageFileName = album;
+		this.sheetMusicFileName = sheetMusic;
 	}
 	
+	// Getters
+		public String getName() {
+			return name;
+		}
+
+
+		public String getArtist() {
+			return artist;
+		}
+
+
+		public int getRuntime() {
+			return runtime;
+		}
+
+
+		public String getGenre() {
+			return genre;
+		}
+
+
+		public String getAlbum() {
+			return albumImageFileName;
+		}
+
+
+		public String getSheetMusic() {
+			return sheetMusicFileName;
+		}
+
+		// Setters
+		public void setName(String name) {
+			this.name = name;
+		}
+
+
+		public void setArtist(String artist) {
+			this.artist = artist;
+		}
+
+
+		public void setRuntime(int runtime) {
+			this.runtime = runtime;
+		}
+
+
+		public void setGenre(String genre) {
+			this.genre = genre;
+		}
+
+
+		public void setAlbum(String album) {
+			this.albumImageFileName = album;
+		}
+
+
+		public void setSheetMusic(String sheetMusic) {
+			this.sheetMusicFileName = sheetMusic;
+		}
+		
 	
 }

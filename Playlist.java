@@ -1,45 +1,42 @@
 package application;
 
+import java.util.ArrayList;
+
 public class Playlist {
 
 	public String name;
 	
-	public Song[] playlist;
+	public ArrayList<Song> playlist;
 	
 	public int runtimeTotal;
 	
 	//Constructor
-	public Playlist(Song[] playlist, int runtimeTotal) {
+	public Playlist(ArrayList<Song> playlist, int runtimeTotal) {
 		
 		this.playlist = playlist;
 		this.runtimeTotal = runtimeTotal;
 	}
-
-	// Getters
-	public String getName() {
-		return name;
-	}
-
-	public Song[] getPlaylist() {
-		return playlist;
-	}
-
-	public int getRuntimeTotal() {
-		return runtimeTotal;
-	}
-
-	// Setters
-	public void setName(String name) {
-		this.name = name;
-	}
-
-	public void setPlaylist(Song[] playlist) {
-		this.playlist = playlist;
-	}
-
-	public void setRuntimeTotal(int runtimeTotal) {
-		this.runtimeTotal = runtimeTotal;
+	
+	public Playlist() {
+		this.name = "";
+		this.playlist = new ArrayList<Song>();
+		this.runtimeTotal = 0;
 	}
 	
+	public void setName(String s) {
+		this.name = s;
+	}
 	
+	public void addSong(Song song) {
+		playlist.add(song);
+		runtimeTotal = runtimeTotal + song.getRuntime();
+	}
+	
+	public Song getSong(int i) {
+		return playlist.get(i);
+	}
+	
+	public int size() {
+		return playlist.size();
+	}
 }
