@@ -133,7 +133,7 @@ public class Main extends Application {
 			}
 			else if (source == settingsButton) {
 				System.out.println("User selected: Settings");
-				
+				settingsPane = (new SettingsPane()).buildSettingsPane();
 				root.setCenter(settingsPane);
 			}
 			else if (source == addPlayListButton) {
