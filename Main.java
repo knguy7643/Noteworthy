@@ -56,6 +56,7 @@ public class Main extends Application {
 	private Button newPLSubmit;
 	private Label newPLLabel;
 	private TextField newPLTextfield;
+	private Button backToLibrary;
 	
 	// Action Handler to deal with the user's inputs. 
 	private EventHandler<ActionEvent> actionHandler;
@@ -183,11 +184,24 @@ public class Main extends Application {
 		StackPane newPlaylistPane = new StackPane();
 		
 		newPLSubmit = new Button("Submit");
-		newPLSubmit.setFont(new Font(15));
+		newPLSubmit.setFont(new Font(11));
 		newPLLabel = new Label("Create A New Playlist");
 		newPLLabel.setFont(new Font(30));
+		newPLTextfield = new TextField("Enter New Playlist Name");
+		
+		backToLibrary = new Button("<-");
+		backToLibrary.setFont(new Font(15));
+		backToLibrary.setOnAction(actionHandler);
+		
+		HBox textField = new HBox();
+		textField.getChildren().add(newPLTextfield);
+		textField.getChildren().add(newPLSubmit);
 		
 		newPlaylistPane.getChildren().add(newPLLabel);
+		newPlaylistPane.getChildren().add(textField);
+		newPlaylistPane.getChildren().add(backToLibrary);
+		
+		newPlaylistPane.setAlignment(Pos.CENTER);
 		
 		return newPlaylistPane;
 	}
@@ -221,7 +235,11 @@ public class Main extends Application {
 				
 				root.setCenter(newPlaylistPane);
 			}
-			
+			else if (source == backToLibrary) {
+				System.out.println("User selected: Library");
+				
+				root.setCenter(libraryPane);
+			}
 		}
 	}
 	
