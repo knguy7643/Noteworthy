@@ -1,16 +1,14 @@
 package application;
 	
-import java.awt.event.WindowEvent;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
-import javafx.scene.layout.StackPane;
 import javafx.application.Application;
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
@@ -32,6 +30,7 @@ import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
+import javafx.scene.control.ListView;
 
 public class Main extends Application {
 	
@@ -59,6 +58,10 @@ public class Main extends Application {
 	private TextField newPLTextfield;
 	private Button backToLibrary;
 	private ScrollPane playlistListLibrary;
+	private ListView<String> listLibrary;
+	private Node playListPane;
+	private ListView<String> listSongs;
+	private Label playlistNameLabel;
 	
 	// Action Handler to deal with the user's inputs. 
 	private EventHandler<ActionEvent> actionHandler;
@@ -177,9 +180,76 @@ public class Main extends Application {
 		libraryPane.setMaxSize(500, 725);
 		
 		libraryPane.setTop(topComponents);
-		libraryPane.setCenter(playlistListLibrary);
+		//libraryPane.setCenter(playlistListLibrary);
+		
+		listLibrary = new ListView<>();
+		
+		for (int i = 0; i < playlistList.size();i++) {
+			listLibrary.getItems().add(playlistList.get(i).getPLName());
+		}
+		
+		listLibrary.setMaxSize(450, 600);
+		listLibrary.setMinSize(450, 600);
+		
+		listLibrary.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Object>() {
+
+			@Override
+			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
+				// TODO Auto-generated method stub
+				System.out.println("User selected " + listLibrary.getSelectionModel().getSelectedItem() + " playlist.");
+				
+				playListPane = buildPlaylistPane(listLibrary.getSelectionModel().getSelectedItem());
+				
+				root.setCenter(playListPane);
+			}
+			
+		});
+		
+		libraryPane.setCenter(listLibrary);
 		
 		return libraryPane;	
+	}
+	
+	public Node buildPlaylistPane(String plName) {
+		
+		BorderPane songListPane = new BorderPane();
+		
+		playlistNameLabel = new Label(plName);
+		playlistNameLabel.setFont(new Font("arial", 32));
+		playlistNameLabel.setPrefSize(400, 75);
+		playlistNameLabel.setMinSize(400, 75);
+		playlistNameLabel.setMaxSize(400, 75);
+		playlistNameLabel.setAlignment(Pos.CENTER);
+		
+		HBox topComponents = new HBox();
+		topComponents.getChildren().add(backToLibrary);
+		topComponents.getChildren().add(playlistNameLabel);
+		topComponents.setAlignment(Pos.CENTER);
+		topComponents.setMaxSize(500, 100);
+		topComponents.setMinSize(500, 100);
+		
+		Playlist tempPL = new Playlist();
+		
+		for (int i = 0; i < playlistList.size(); i++) {
+			if (plName.equalsIgnoreCase(playlistList.get(i).getPLName())) {
+				tempPL = playlistList.get(i);
+				break;
+			}
+		}
+		
+		listSongs = new ListView<>();
+		
+		for (int j = 0; j < tempPL.size(); j++) {
+			listSongs.getItems().add(tempPL.getSong(j).getName());
+		}
+		
+		listSongs.setMaxSize(450, 600);
+		listSongs.setMinSize(450, 600);
+		
+		songListPane.setCenter(listSongs);
+		songListPane.setTop(topComponents);
+		
+		return songListPane;
 	}
 	
 	public Node buildNewPLPane() {
@@ -265,7 +335,7 @@ public class Main extends Application {
 	
 	public ArrayList<Playlist> loadPlayList(String filename) throws IOException {
 		
-		ArrayList<Playlist> playlistList = new ArrayList();
+		ArrayList<Playlist> playlistList = new ArrayList<Playlist>();
 		
 		BufferedReader input = new BufferedReader(new FileReader(filename));
 		
