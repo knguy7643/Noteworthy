@@ -31,6 +31,7 @@ import javafx.scene.paint.Color;
 import javafx.scene.control.ScrollPane;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TextField;
+import javafx.scene.layout.Pane;
 
 public class Main extends Application {
 	
@@ -57,6 +58,7 @@ public class Main extends Application {
 	private Label newPLLabel;
 	private TextField newPLTextfield;
 	private Button backToLibrary;
+	private ScrollPane playlistListLibrary;
 	
 	// Action Handler to deal with the user's inputs. 
 	private EventHandler<ActionEvent> actionHandler;
@@ -160,13 +162,13 @@ public class Main extends Application {
 		topComponents.setMaxSize(500, 100);
 		topComponents.setMinSize(500, 100);
 		
-		ScrollPane playlistList = new ScrollPane();
-		playlistList.setVbarPolicy(ScrollBarPolicy.ALWAYS);
-		playlistList.setPrefViewportHeight(600);
-		playlistList.setPrefViewportWidth(450);
-		playlistList.setMaxSize(450, 600);
-		playlistList.setMinSize(450, 600);
-		playlistList.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+		playlistListLibrary = new ScrollPane();
+		playlistListLibrary.setVbarPolicy(ScrollBarPolicy.ALWAYS);
+		playlistListLibrary.setPrefViewportHeight(600);
+		playlistListLibrary.setPrefViewportWidth(450);
+		playlistListLibrary.setMaxSize(450, 600);
+		playlistListLibrary.setMinSize(450, 600);
+		playlistListLibrary.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
 		
 		BorderPane libraryPane = new BorderPane();
 		
@@ -175,33 +177,38 @@ public class Main extends Application {
 		libraryPane.setMaxSize(500, 725);
 		
 		libraryPane.setTop(topComponents);
-		libraryPane.setCenter(playlistList);
+		libraryPane.setCenter(playlistListLibrary);
 		
 		return libraryPane;	
 	}
 	
 	public Node buildNewPLPane() {
-		StackPane newPlaylistPane = new StackPane();
+		Pane newPlaylistPane = new Pane();
 		
 		newPLSubmit = new Button("Submit");
 		newPLSubmit.setFont(new Font(11));
+		newPLSubmit.setOnAction(actionHandler);
+		
 		newPLLabel = new Label("Create A New Playlist");
 		newPLLabel.setFont(new Font(30));
+		newPLLabel.relocate(115, 300);
+		
 		newPLTextfield = new TextField("Enter New Playlist Name");
+		newPLTextfield.setMinWidth(200);
 		
 		backToLibrary = new Button("<-");
 		backToLibrary.setFont(new Font(15));
 		backToLibrary.setOnAction(actionHandler);
+		backToLibrary.relocate(10, 10);
 		
 		HBox textField = new HBox();
 		textField.getChildren().add(newPLTextfield);
 		textField.getChildren().add(newPLSubmit);
+		textField.relocate(130, 340);
 		
 		newPlaylistPane.getChildren().add(newPLLabel);
 		newPlaylistPane.getChildren().add(textField);
 		newPlaylistPane.getChildren().add(backToLibrary);
-		
-		newPlaylistPane.setAlignment(Pos.CENTER);
 		
 		return newPlaylistPane;
 	}
@@ -237,6 +244,19 @@ public class Main extends Application {
 			}
 			else if (source == backToLibrary) {
 				System.out.println("User selected: Library");
+				
+				root.setCenter(libraryPane);
+			}
+			else if (source == newPLSubmit) {
+				System.out.println("Creating new playlist.");
+				
+				Playlist tempPL = new Playlist();
+				
+				tempPL.setName(newPLTextfield.getText());
+				
+				playlistList.add(tempPL);
+				
+				System.out.print(playlistList.get(2).getPLName());
 				
 				root.setCenter(libraryPane);
 			}
@@ -315,6 +335,12 @@ public class Main extends Application {
 		
 		writer.close();
 		
+	}
+
+	public void populateLibrary(ArrayList<Playlist> list) {
+		for (int i = 0; i < list.size(); i++) {
+			
+		}
 	}
 	
 }
