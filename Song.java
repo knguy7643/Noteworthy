@@ -16,6 +16,8 @@ public class Song {
 	
 	public String sheetMusicFileName;
 	
+	public String audioFileName;
+	
 	
 	// Constructor
 	public Song(String name, String artist, int runtime, String genre, String album, String sheetMusic) {
@@ -25,6 +27,16 @@ public class Song {
 		this.genre = genre;
 		this.albumImageFileName = album;
 		this.sheetMusicFileName = sheetMusic;
+	}
+	
+	public Song(String name, String artist, int runtime, String genre, String album, String sheetMusic, String audioFile) {
+		
+		this.name = name;
+		this.artist = artist;
+		this.genre = genre;
+		this.albumImageFileName = album;
+		this.sheetMusicFileName = sheetMusic;
+		this.audioFileName = audioFile;
 	}
 	
 	// Getters
@@ -87,5 +99,12 @@ public class Song {
 			this.sheetMusicFileName = sheetMusic;
 		}
 		
+		public String getAudioFile() {
+			return this.audioFileName;
+		}
+		
+		public void setAudioFile(String s) {
+			this.audioFileName = s;
+		}
 	
 }

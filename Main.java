@@ -2,6 +2,7 @@ package application;
 	
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
+import java.io.File;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
@@ -20,17 +21,14 @@ import javafx.scene.layout.HBox;
 import javafx.scene.control.Button;
 import javafx.scene.text.Font;
 import javafx.scene.control.Label;
-import javafx.scene.layout.Border;
-import javafx.scene.layout.BorderStroke;
-import javafx.scene.layout.BorderStrokeStyle;
-import javafx.scene.layout.BorderWidths;
-import javafx.scene.layout.CornerRadii;
-import javafx.scene.paint.Color;
-import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TextField;
 import javafx.scene.layout.Pane;
 import javafx.scene.control.ListView;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.media.Media;
+import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaView;
 
 public class Main extends Application {
 	
@@ -42,6 +40,7 @@ public class Main extends Application {
 	private Node searchPane;
 	private Node settingsPane;
 	private Node newPlaylistPane;
+	private Node songPane;
 	
 	// Private variables for the navigation bar.
 	private Node navigationBar;
@@ -57,30 +56,46 @@ public class Main extends Application {
 	private Label newPLLabel;
 	private TextField newPLTextfield;
 	private Button backToLibrary;
-	private ScrollPane playlistListLibrary;
 	private ListView<String> listLibrary;
 	private Node playListPane;
 	private ListView<String> listSongs;
 	private Label playlistNameLabel;
+	private Playlist selectedPlaylist;
+	private Song selectedSong;
+	
+	// Private variable for the Song Pane
+	private Label songNameLabel;
+	private Button backToPlaylist;
+	private Button backToSearch;
+	private Button backToBrowse;
+	private ImageView songImageView;
+	private Button songSheetMusic;
+	private Button songPlay;
+	private Button songPause;
+	private Button songNext;
+	private Button songPrev;
 	
 	// Action Handler to deal with the user's inputs. 
 	private EventHandler<ActionEvent> actionHandler;
 	
 	// TODO: Add other neededs variables. Delete uneeded variables. 
 	private ArrayList<Playlist> playlistList;
+	private Media media;
+	private MediaPlayer mediaplayer;
+	private MediaView mediaview;
 	
 // Methods Below. 
 	
 	@Override
 	public void start(Stage primaryStage) {
 		try {
-			playlistList = loadPlayList("playlist.txt");
+			playlistList = loadPlayList("src/resources/playlist.txt");
 			
 			actionHandler = new ActionHandler();
 	
 			libraryPane = buildLibraryPane();
 			searchPane = (new SearchPane()).buildSearchPane();
-			settingsPane = (new SettingsPane()).buildSettingsPane();
+			//settingsPane = (new SettingsPane()).buildSettingsPane(); Marked grey since images in settings pane aren't in resource folder yet.
 			newPlaylistPane = buildNewPLPane();
 			
 			root = new BorderPane();
@@ -165,14 +180,6 @@ public class Main extends Application {
 		topComponents.setMaxSize(500, 100);
 		topComponents.setMinSize(500, 100);
 		
-		playlistListLibrary = new ScrollPane();
-		playlistListLibrary.setVbarPolicy(ScrollBarPolicy.ALWAYS);
-		playlistListLibrary.setPrefViewportHeight(600);
-		playlistListLibrary.setPrefViewportWidth(450);
-		playlistListLibrary.setMaxSize(450, 600);
-		playlistListLibrary.setMinSize(450, 600);
-		playlistListLibrary.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
-		
 		BorderPane libraryPane = new BorderPane();
 		
 		libraryPane.setPrefSize(500, 725);
@@ -180,7 +187,6 @@ public class Main extends Application {
 		libraryPane.setMaxSize(500, 725);
 		
 		libraryPane.setTop(topComponents);
-		//libraryPane.setCenter(playlistListLibrary);
 		
 		listLibrary = new ListView<>();
 		
@@ -195,7 +201,6 @@ public class Main extends Application {
 
 			@Override
 			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
-				// TODO Auto-generated method stub
 				System.out.println("User selected " + listLibrary.getSelectionModel().getSelectedItem() + " playlist.");
 				
 				playListPane = buildPlaylistPane(listLibrary.getSelectionModel().getSelectedItem());
@@ -228,28 +233,122 @@ public class Main extends Application {
 		topComponents.setMaxSize(500, 100);
 		topComponents.setMinSize(500, 100);
 		
-		Playlist tempPL = new Playlist();
+		selectedPlaylist = new Playlist();
 		
 		for (int i = 0; i < playlistList.size(); i++) {
 			if (plName.equalsIgnoreCase(playlistList.get(i).getPLName())) {
-				tempPL = playlistList.get(i);
+				selectedPlaylist = playlistList.get(i);
 				break;
 			}
 		}
 		
 		listSongs = new ListView<>();
 		
-		for (int j = 0; j < tempPL.size(); j++) {
-			listSongs.getItems().add(tempPL.getSong(j).getName());
+		for (int j = 0; j < selectedPlaylist.size(); j++) {
+			listSongs.getItems().add(selectedPlaylist.getSong(j).getName());
 		}
 		
 		listSongs.setMaxSize(450, 600);
 		listSongs.setMinSize(450, 600);
 		
+		listSongs.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Object>() {
+
+			@Override
+			public void changed(ObservableValue<? extends Object> observable, Object oldValue, Object newValue) {
+				System.out.println("User selected " + listSongs.getSelectionModel().getSelectedItem() + " song.");
+				
+				for (int i = 0; i < selectedPlaylist.size(); i++) {
+					if (listSongs.getSelectionModel().getSelectedItem().equalsIgnoreCase(selectedPlaylist.getSong(i).getName())) {
+						selectedSong = selectedPlaylist.getSong(i);
+					}
+				}
+				
+				songPane = buildSongPane(selectedSong, "Playlist");
+				
+				root.setCenter(songPane);
+				
+			}
+			
+		});
+		
 		songListPane.setCenter(listSongs);
 		songListPane.setTop(topComponents);
 		
 		return songListPane;
+	}
+	
+	public Node buildSongPane(Song song, String prevLoc) {
+		
+		Pane pane = new Pane();
+		
+		if (prevLoc.equalsIgnoreCase("Playlist")) {
+			backToPlaylist = new Button("<-");
+			backToPlaylist.setFont(new Font(15));
+			backToPlaylist.setOnAction(actionHandler);
+			backToPlaylist.relocate(10, 10);
+			pane.getChildren().add(backToPlaylist);
+		}
+		else if (prevLoc.equalsIgnoreCase("Search")) {
+			backToSearch = new Button("<-");
+			backToSearch.setFont(new Font(15));
+			backToSearch.setOnAction(actionHandler);
+			backToSearch.relocate(10, 10);
+			pane.getChildren().add(backToSearch);
+		}
+		else if (prevLoc.equalsIgnoreCase("Browse")) {
+			backToBrowse = new Button("<-");
+			backToBrowse.setFont(new Font(15));
+			backToBrowse.setOnAction(actionHandler);
+			backToBrowse.relocate(10, 10);
+			pane.getChildren().add(backToBrowse);
+		}
+		
+		String songImageFilename = "src/resources/" + selectedSong.getAlbum();
+		
+		Image songImage = new Image(new File(songImageFilename).toURI().toString());
+		
+		songImageView = new ImageView();
+		songImageView.setImage(songImage);
+		songImageView.relocate(125, 120);
+		songImageView.setFitHeight(250);
+		songImageView.setFitWidth(250);
+		songImageView.setPreserveRatio(true);
+		
+		songNameLabel = new Label(selectedSong.getName());
+		songNameLabel.setFont(new Font(25));
+		songNameLabel.setMaxWidth(250);
+		songNameLabel.setMinWidth(250);
+		songNameLabel.setAlignment(Pos.CENTER);
+		songNameLabel.relocate(125, 390);
+
+		pane.getChildren().add(songImageView);
+		pane.getChildren().add(songNameLabel);
+		
+		songPlay = new Button("|>");
+		songPlay.setFont(new Font(15));
+		songPlay.relocate(450, 450);
+		songPlay.setOnAction(actionHandler);
+		
+		HBox songNav = new HBox();
+		
+		pane.getChildren().add(songPlay);
+		
+		return pane;
+	}
+	
+	public void play(Song s) {
+		
+		media = new Media(new File("src/resources/" + selectedSong.getAudioFile()).toURI().toString());
+		
+		mediaplayer = new MediaPlayer(media);
+		
+		mediaplayer.setVolume(30);
+		
+		mediaview = new MediaView(mediaplayer);
+		
+		mediaplayer.play();
+		
+		System.out.println("Playing" + selectedSong.getName());
 	}
 	
 	public Node buildNewPLPane() {
@@ -328,7 +427,17 @@ public class Main extends Application {
 				
 				System.out.print(playlistList.get(2).getPLName());
 				
+				libraryPane = buildLibraryPane();
+				
 				root.setCenter(libraryPane);
+			}
+			else if (source == backToPlaylist) {
+				System.out.println("Return to playlsit from song.");
+				
+				root.setCenter(playListPane);
+			}
+			else if (source == songPlay) {
+				play(selectedSong);
 			}
 		}
 	}
@@ -361,7 +470,7 @@ public class Main extends Application {
 				
 				String[] songInfo = songStringFormat.split("/");
 				
-				Song song = new Song(songInfo[0], songInfo[1], Integer.parseInt(songInfo[2]), songInfo[3], songInfo[4], songInfo[5]);
+				Song song = new Song(songInfo[0], songInfo[1], Integer.parseInt(songInfo[2]), songInfo[3], songInfo[4], songInfo[5], songInfo[6]);
 				
 				playlist.addSong(song);
 				
@@ -407,10 +516,4 @@ public class Main extends Application {
 		
 	}
 
-	public void populateLibrary(ArrayList<Playlist> list) {
-		for (int i = 0; i < list.size(); i++) {
-			
-		}
-	}
-	
 }
