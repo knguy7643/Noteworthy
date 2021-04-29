@@ -1,68 +1,107 @@
 package application;
 
 import javafx.geometry.Insets;
+import javafx.geometry.Orientation;
 import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
-import javafx.scene.layout.BorderPane;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
+import javafx.scene.layout.FlowPane;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
+import javafx.scene.text.FontWeight;
 
 public class SettingsPane {
-
-  /* still need to edit formatting! */
-
+	
 	private Label settingsLabel;
 	private Label accountLabel;
 	private Label connectLabel;
 	private Label aboutLabel;
-
+	
+	private ImageView arrow1, arrow2, arrow3;
+	
 	private Button logOut;
-
+	
 	public Node buildSettingsPane() {
-
+		Font btnFont = Font.font("arial", FontWeight.BOLD, 18.0);
+		Font lblFont = Font.font("arial", FontWeight.BOLD, 22.0);
+		
 		settingsLabel = new Label("Settings");
-
+		
 		settingsLabel.setFont(new Font("arial", 32));
 		settingsLabel.setPrefSize(400,  75);
-
+		
 		accountLabel = new Label("Account/Privacy Settings");
-		accountLabel.setFont(new Font("arial", 18));
-		accountLabel.setPrefSize(300, 75);
-
+		accountLabel.setFont(lblFont);
+		accountLabel.setPrefHeight(75);
+		
 		connectLabel = new Label("Connect Devices");
-		connectLabel.setFont(new Font("arial", 18));
-		connectLabel.setPrefSize(300, 75);
-
+		connectLabel.setFont(lblFont);
+		connectLabel.setPrefHeight(75);
+		
 		aboutLabel = new Label("About");
-		aboutLabel.setFont(new Font("arial", 18));
-		aboutLabel.setPrefSize(300, 75);
-
-		logOut = new Button("Log Out"); //still need to adjust placement & size
-
+		aboutLabel.setFont(lblFont);
+		aboutLabel.setPrefHeight(75);
+		
+		logOut = new Button("Log Out");
+		logOut.setPrefSize(100, 60);
+		
+		logOut.setFont(btnFont);
+		Label nextPage = new Label("\uf061");
+		nextPage.setFont(lblFont);
+		
+		arrow1 = new ImageView(new Image("arrow.png", 30, 30, true, true));
+		arrow2 = new ImageView(new Image("arrow.png", 30, 30, true, true));
+		arrow3 = new ImageView(new Image("arrow.png", 30, 30, true, true));
+		
+		arrow1.setFitHeight(40);
+		arrow1.setFitWidth(40);
+		arrow2.setFitHeight(40);
+		arrow2.setFitWidth(40);
+		arrow3.setFitHeight(40);
+		arrow3.setFitWidth(40);
+		
+		HBox row1 = new HBox(150);
+		row1.getChildren().add(accountLabel);
+		row1.getChildren().add(arrow1);
+		row1.setAlignment(Pos.CENTER_LEFT);
+		
+		HBox row2 = new HBox(240);
+		row2.getChildren().add(connectLabel);
+		row2.getChildren().add(arrow2);
+		row2.setAlignment(Pos.CENTER_LEFT);
+		
+		HBox row3 = new HBox(355);
+		row3.getChildren().add(aboutLabel);
+		row3.getChildren().add(arrow3);
+		row3.setAlignment(Pos.CENTER_LEFT);
+			
 		VBox selections = new VBox(10);
-		selections.getChildren().add(accountLabel);
-		selections.getChildren().add(connectLabel);
-		selections.getChildren().add(aboutLabel);
+		selections.getChildren().add(row1);
+		selections.getChildren().add(row2);
+		selections.getChildren().add(row3);
 
-		BorderPane pane = new BorderPane();
-
+		FlowPane pane = new FlowPane(Orientation.VERTICAL);
+		pane.getChildren().add(settingsLabel);
+		pane.setMargin(settingsLabel, new Insets(10, 20, 20, 200));
+		
 		pane.setPrefSize(500, 725);
 		pane.setMinSize(500,  725);
 		pane.setMaxSize(500,  725);
-
-		pane.setTop(settingsLabel);
-		pane.setCenter(selections);
-		pane.setBottom(logOut);
-		pane.setAlignment(logOut, Pos.TOP_CENTER);
+		
+		pane.getChildren().add(selections);
 		pane.setMargin(selections, new Insets(10, 10, 10, 10));
-		pane.setMargin(settingsLabel, new Insets(10, 10, 10, 10));
+		
+		pane.getChildren().add(logOut);
+		pane.setMargin(logOut, new Insets(20, 20, 20, 200));
 
 
 		return pane;
-
-
+		
+		
 	}
-
+	
 }
