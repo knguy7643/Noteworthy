@@ -18,6 +18,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.Border;
@@ -32,6 +33,7 @@ import javafx.scene.text.Font;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -455,6 +457,8 @@ public class Main extends Application {
 	
 	public Node buildSearchPane() throws IOException {
 		
+		actionHandler = new ActionHandler();
+		
 		Label searchLabel = new Label("Search");
 		searchLabel.setFont(new Font("arial", 32));
 		searchLabel.setPrefSize(400, 75);
@@ -486,7 +490,9 @@ public class Main extends Application {
 		searchPane.setMaxSize(500, 725);
 		
 		searchPane.setTop(top);
-		searchPane.setCenter(buildTable());
+		
+		table = buildTable();
+		searchPane.setCenter(table);
 		
 		table.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Object>() {
 
@@ -494,13 +500,14 @@ public class Main extends Application {
 			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
 				
 				if (table.getSelectionModel().getSelectedItem() != null) {
-					addToPlaylistPane = buildAddToPlaylistPane(table.getSelectionModel().getSelectedItem());
-
-					System.out.println("User selected " + table.getSelectionModel().getSelectedItem().getName());
-
-					root.setCenter(addToPlaylistPane);
+				addToPlaylistPane = buildAddToPlaylistPane(table.getSelectionModel().getSelectedItem());
+				
+				System.out.println("User selected " + table.getSelectionModel().getSelectedItem().getName());
+				
+				root.setCenter(addToPlaylistPane);
 				}
 
+				return;
 			}
 			
 		});
@@ -526,6 +533,7 @@ public class Main extends Application {
         TableColumn<Song, String> albumCol = new TableColumn<Song, String>("Album");
         albumCol.setMinWidth(450.0/3.0);
         albumCol.setCellValueFactory(new PropertyValueFactory<Song, String>("album"));
+        albumCol.setCellFactory(new ImageCellFactory());
         
         table.setItems(buildSongList());
         table.getColumns().addAll(songCol, artistCol, albumCol);
@@ -533,6 +541,45 @@ public class Main extends Application {
 		
 		return table;
 	}
+
+	private final class ImageCellFactory
+		implements Callback<TableColumn<Song, String>,
+							TableCell<Song, String>>
+	{
+		public TableCell<Song, String>	call(TableColumn<Song, String> v)
+		{
+			return new ImageCell();
+		}
+	}
+	
+	private final class ImageCell
+	extends TableCell<Song, String>
+{
+	public void	updateItem(String value, boolean isEmpty)
+	{
+		super.updateItem(value, isEmpty);
+
+		if (isEmpty || (value == null))
+		{
+			setGraphic(null);
+			setAlignment(Pos.CENTER);
+
+			return;
+		}
+		
+		ImageView	image = createFXIcon(value, 100, 100);
+
+		setGraphic(image);
+		setAlignment(Pos.CENTER);
+	}
+	
+	public ImageView	createFXIcon(String url, double w, double h)
+	{
+		Image	image = new Image("resources/" + url, w, h, false, true);
+
+		return new ImageView(image);
+	}
+}
 	
 	public Node buildAddToPlaylistPane(Song song) {
 		
@@ -619,6 +666,7 @@ public class Main extends Application {
 		return songlist;
 	}
 
+
 	public final class FilterPredicate
 		implements Predicate<Song>
 	{
@@ -626,6 +674,11 @@ public class Main extends Application {
 		{
 			
 			if (searchBox.getText().equalsIgnoreCase(song.getName()) || searchBox.getText().equalsIgnoreCase(song.getArtist())) {
+				
+				return true;
+			}
+			
+			else if (searchBox.getText().equalsIgnoreCase("") || searchBox.getText().equalsIgnoreCase("")) {
 				
 				return true;
 			}
@@ -650,6 +703,10 @@ public class Main extends Application {
 			}
 			else if (source == searchButton) {
 				System.out.println("User selected: Search");
+				
+				table.getSelectionModel().clearSelection();
+				searchBox.clear();
+				updateFilter();
 				
 				root.setCenter(searchPane);
 			}
