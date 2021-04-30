@@ -29,6 +29,8 @@ import javafx.scene.layout.BorderWidths;
 import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.control.Button;
+import javafx.scene.control.ButtonType;
+import javafx.scene.control.Dialog;
 import javafx.scene.text.Font;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
@@ -262,7 +264,7 @@ public class Main extends Application {
 	
 	public Node buildSettingsPane() {
 		Font btnFont = Font.font("arial", FontWeight.BOLD, 18.0);
-		Font lblFont = Font.font("arial", FontWeight.BOLD, 22.0);
+		Font lblFont = Font.font("arial", 22.0);
 		
 		settingsLabel = new Label("Settings");
 		
@@ -283,10 +285,8 @@ public class Main extends Application {
 		
 		logOut = new Button("Log Out");
 		logOut.setPrefSize(100, 60);
-		
 		logOut.setFont(btnFont);
-		Label nextPage = new Label("\uf061");
-		nextPage.setFont(lblFont);
+		logOut.setOnAction(actionHandler);		
 		
 		arrow1 = new ImageView(new Image("resources/arrow.png", 30, 30, true, true));
 		arrow2 = new ImageView(new Image("resources/arrow.png", 30, 30, true, true));
@@ -299,17 +299,17 @@ public class Main extends Application {
 		arrow3.setFitHeight(40);
 		arrow3.setFitWidth(40);
 		
-		HBox row1 = new HBox(150);
+		HBox row1 = new HBox(192);
 		row1.getChildren().add(accountLabel);
 		row1.getChildren().add(arrow1);
 		row1.setAlignment(Pos.CENTER_LEFT);
 		
-		HBox row2 = new HBox(240);
+		HBox row2 = new HBox(270);
 		row2.getChildren().add(connectLabel);
 		row2.getChildren().add(arrow2);
 		row2.setAlignment(Pos.CENTER_LEFT);
 		
-		HBox row3 = new HBox(355);
+		HBox row3 = new HBox(380);
 		row3.getChildren().add(aboutLabel);
 		row3.getChildren().add(arrow3);
 		row3.setAlignment(Pos.CENTER_LEFT);
@@ -1006,6 +1006,14 @@ public class Main extends Application {
 			}
 			else if (source == backToSong) {
 				root.setCenter(buildSongPane(selectedSong, "Playlist"));
+			}
+			else if (source == logOut) {
+				Dialog<String> dialog = new Dialog<String>();
+				dialog.setTitle("Log Out");
+				dialog.getDialogPane().getButtonTypes().add(ButtonType.CLOSE);
+				dialog.setContentText("User has successfully logged out.");
+				
+				dialog.showAndWait();
 			}
 		}
 	}
