@@ -525,6 +525,7 @@ public class Main extends Application {
 		
 		Pane pane = new Pane();
 		
+		// Depending on how the user reaches the song pane, it will apply a back button to return to the pane prior to arriving at the song pane.
 		if (prevLoc.equalsIgnoreCase("Playlist")) {
 			backToPlaylist = new Button("<-");
 			backToPlaylist.setFont(new Font(15));
@@ -915,12 +916,14 @@ public class Main extends Application {
 				
 				root.setCenter(browsePane);
 			}
+			
 			// If the user selects the library button on the navigation bar, the application will change to the library pane.
 			else if (source == libraryButton) {
 				System.out.println("User selected: Library");
 				
 				root.setCenter(libraryPane);
 			}
+			
 			// If the user selects the search button on the navigation bar, the application will change to the search pane.
 			else if (source == searchButton) {
 				System.out.println("User selected: Search");
@@ -931,23 +934,29 @@ public class Main extends Application {
 				
 				root.setCenter(searchPane);
 			}
+			
 			// If the user selects the settings button on the navigation bar, the application will change to the settings pane.
 			else if (source == settingsButton) {
 				System.out.println("User selected: Settings");
 				
 				root.setCenter(settingsPane);
 			}
+			
 			// If the user selects the button to add a new playlist in their library, the application will change to the pane where the user can create a new playlist..
 			else if (source == addPlayListButton) {
 				System.out.println("Open create playlist pane.");
 				
 				root.setCenter(newPlaylistPane);
 			}
+			
+			// If the user selects the back button, the application will change back to the library pane.
 			else if (source == backToLibrary) {
 				System.out.println("User selected: Library");
 				
 				root.setCenter(libraryPane);
 			}
+			
+			// If the user selects the submit button, the application will read the text input and create a new playlist with that name.
 			else if (source == newPLSubmit) {
 				System.out.println("Creating new playlist.");
 				
@@ -963,14 +972,20 @@ public class Main extends Application {
 				
 				root.setCenter(libraryPane);
 			}
+			
+			// If the user selects the back button, the application will change back to the playlist pane.
 			else if (source == backToPlaylist) {
 				System.out.println("Return to playlsit from song.");
 				
 				root.setCenter(playListPane);
 			}
+			
+			// If the user selects the back button, the application will change back to the browse pane.
 			else if (source == backToBrowse) {
 				root.setCenter(browsePane);
 			}
+			
+			// If the user selects the play button on the song pane, the application will assign the song's audio file to the player.
 			else if (source == songPlay) {
 				
 				media = new Media(new File("src/resources/" + selectedSong.getAudioFile()).toURI().toString());
@@ -992,6 +1007,7 @@ public class Main extends Application {
 					mediaplayer.play();
 				}
 			}
+			// If the user selects the previous button on the song pane, the application will assign the previous song's audio file to the player. If the song is the first song in the playlist, it will move to the last song.
 			else if (source == songPrev) {
 				if (mediaplayer.getStatus() == Status.PLAYING) {
 					mediaplayer.pause();
@@ -1032,11 +1048,15 @@ public class Main extends Application {
 				mediaplayer.play();
 				
 			}
+			
+			// If the user selects the pause button on the song pane, the application check if the player is currently playing and only pause if currently playing.
 			else if (source == songPause) {
 				if (mediaplayer.getStatus() == Status.PLAYING) {
 					mediaplayer.pause();
 				}
 			}
+			
+			// If the user selects the next button on the song pane, the application will assign the next song's audio file to the player. If the song is the last song in the playlist, it will move to the first song.
 			else if (source == songNext) {
 				
 				int idxCurrSong = selectedPlaylist.getIndex(selectedSong);
@@ -1074,18 +1094,25 @@ public class Main extends Application {
 				mediaplayer.play();
 				
 			}
+			
+			// If the user selects the sheet music button on the song pane, the application will open the sheet music for the song.
 			else if (source == songSheetMusic) {
 				songSheetMusicPane = buildSongSheetMusicPane(selectedSong);
 				
 				root.setCenter(songSheetMusicPane);
 			}
-			else if (source == searchBox || source == goButton) {
-				
+			
+			// Updates the search table for the user when utilziing the search function.
+			else if (source == searchBox || source == goButton) {	
 				updateFilter();
 			}
+			
+			// If the user selects the back button on the sheet music pane, the application will return to the song pane.
 			else if (source == backToSong) {
 				root.setCenter(buildSongPane(selectedSong, "Playlist"));
 			}
+			
+			// If the user selects the Log Out button, the application sign the user out and save their library in txt document format.
 			else if (source == logOut) {
 				try {
 					savePlayList("src/resources/playlist.txt");
@@ -1114,6 +1141,12 @@ public class Main extends Application {
 	
 	// This method is used to load in any of the user's existing playlists.
 	public ArrayList<Playlist> loadPlayList(String filename) throws IOException {
+		
+		/* The first line of the text file will consist of the number of playlist.
+		 * The second line of the text file is the name of the playlist. Playlist will be ended by a line with just a '/' character.
+		 * All lines of text between the line for the playlist name and the '/' are the songs of the playlist.
+		 * The line for each song is broken down into songName/songArtist/songRuntime/songGenre/songImageFilename/songSheetMusicImageFilename/songAudioFile
+		 */
 		
 		ArrayList<Playlist> playlistList = new ArrayList<Playlist>();
 		
