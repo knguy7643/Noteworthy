@@ -1,6 +1,6 @@
-Africa/Toto/295/Rock/Africa.jpg/Africa Sheet Music.png
-Radioactive/Imagine Dragons/187/Rock/Radioactive.jpg/Radioactive Sheet Music.png
-Friends in Low Places/Garth Brooks/258/Country/Friends In Low Places.jpg/Friends In Low Places Sheet Music.png
-Say It Ain't So/Weezer/258/Rock/Say It Ain't So.jpg/Say It Ain't So Sheet Music.png
-Baba O'Riley/The Who/300/Rock/Baba O'Riley.jpg/Baba O'Riley Sheet Music.png
-Buddy Holly/Weezer/159/Rock/Buddy Holly.jpg/Buddy Holly Sheet Music.png
+Africa/Toto/295/Rock/Africa.jpg/Africa Sheet Music.png/Africa.m4a
+Radioactive/Imagine Dragons/187/Rock/Radioactive.jpg/Radioactive Sheet Music.png/Radioactive.m4a
+Shine/Collective Soul/306/Rock/Shine.jpg/Shine Sheet Music.png/Shine.m4a
+Say It Ain't So/Weezer/258/Rock/Say It Ain't So.jpg/Say It Ain't So Sheet Music.png/Say It Ain't So.m4a
+Baba O'Riley/The Who/300/Rock/Baba O'Riley.jpg/Baba O'Riley Sheet Music.png/Baba O'Riley.m4a
+Buddy Holly/Weezer/159/Rock/Buddy Holly.jpg/Buddy Holly Sheet Music.png/Buddy Holly.m4a

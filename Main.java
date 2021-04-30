@@ -19,6 +19,7 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
+import javafx.util.Callback;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.Border;
@@ -33,6 +34,7 @@ import javafx.scene.text.Font;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
+import javafx.scene.control.TableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -413,7 +415,7 @@ public class Main extends Application {
 	
 	// Search Pane Methods
 	
-public Node buildSearchPane() throws IOException {
+	public Node buildSearchPane() throws IOException {
 		
 		actionHandler = new ActionHandler();
 		
@@ -456,6 +458,8 @@ public Node buildSearchPane() throws IOException {
 			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
 				
 				addToPlaylistPane = buildAddToPlaylistPane(table.getSelectionModel().getSelectedItem());
+				
+				System.out.println("User selected " + table.getSelectionModel().getSelectedItem().getName());
 				
 				root.setCenter(addToPlaylistPane);
 			}
@@ -558,7 +562,7 @@ public Node buildSearchPane() throws IOException {
 	
 	public ObservableList<Song> buildSongList() throws IOException {
 		
-		BufferedReader input = new BufferedReader(new FileReader("songlist.txt"));
+		BufferedReader input = new BufferedReader(new FileReader("src/resources/songlist.txt"));
 		
 		String songInfo;
 		
@@ -566,7 +570,7 @@ public Node buildSearchPane() throws IOException {
 			
 			String[] songInfoArray = songInfo.split("/");
 			
-			Song song = new Song(songInfoArray[0], songInfoArray[1], Integer.parseInt(songInfoArray[2]), songInfoArray[3], songInfoArray[4], songInfoArray[5]);
+			Song song = new Song(songInfoArray[0], songInfoArray[1], Integer.parseInt(songInfoArray[2]), songInfoArray[3], songInfoArray[4], songInfoArray[5], songInfoArray[6]);
 			
 			songlist.add(song);
 		}
