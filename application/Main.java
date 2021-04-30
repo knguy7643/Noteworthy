@@ -83,6 +83,19 @@ public class Main extends Application {
 	private Playlist selectedPlaylist;
 	private Song selectedSong;
 	
+	// Private variables for Settings Pane
+	private Label settingsLabel;
+	private Label accountLabel;
+	private Label connectLabel;
+	private Label aboutLabel;
+	private ImageView arrow1, arrow2, arrow3;
+	private Button logOut;
+	
+	// Private variables for Browse Pane
+	private Label browseLabel;
+	private Label recentlyPlayed;
+	private Label newRelease;
+	
 	// Private variable for the Search Pane
 	
 	private TableView<Song> table;
@@ -127,7 +140,7 @@ public class Main extends Application {
 	
 			libraryPane = buildLibraryPane();
 			searchPane = buildSearchPane();
-			//settingsPane = (new SettingsPane()).buildSettingsPane();
+			settingsPane = buildSettingsPane();
 			newPlaylistPane = buildNewPLPane();
 			
 			root = new BorderPane();
@@ -245,6 +258,190 @@ public class Main extends Application {
 		libraryPane.setCenter(listLibrary);
 		
 		return libraryPane;	
+	}
+	
+	public Node buildSettingsPane() {
+		Font btnFont = Font.font("arial", FontWeight.BOLD, 18.0);
+		Font lblFont = Font.font("arial", FontWeight.BOLD, 22.0);
+		
+		settingsLabel = new Label("Settings");
+		
+		settingsLabel.setFont(new Font("arial", 32));
+		settingsLabel.setPrefSize(400,  75);
+		
+		accountLabel = new Label("Account/Privacy Settings");
+		accountLabel.setFont(lblFont);
+		accountLabel.setPrefHeight(75);
+		
+		connectLabel = new Label("Connect Devices");
+		connectLabel.setFont(lblFont);
+		connectLabel.setPrefHeight(75);
+		
+		aboutLabel = new Label("About");
+		aboutLabel.setFont(lblFont);
+		aboutLabel.setPrefHeight(75);
+		
+		logOut = new Button("Log Out");
+		logOut.setPrefSize(100, 60);
+		
+		logOut.setFont(btnFont);
+		Label nextPage = new Label("\uf061");
+		nextPage.setFont(lblFont);
+		
+		arrow1 = new ImageView(new Image("resources/arrow.png", 30, 30, true, true));
+		arrow2 = new ImageView(new Image("resources/arrow.png", 30, 30, true, true));
+		arrow3 = new ImageView(new Image("resources/arrow.png", 30, 30, true, true));
+		
+		arrow1.setFitHeight(40);
+		arrow1.setFitWidth(40);
+		arrow2.setFitHeight(40);
+		arrow2.setFitWidth(40);
+		arrow3.setFitHeight(40);
+		arrow3.setFitWidth(40);
+		
+		HBox row1 = new HBox(150);
+		row1.getChildren().add(accountLabel);
+		row1.getChildren().add(arrow1);
+		row1.setAlignment(Pos.CENTER_LEFT);
+		
+		HBox row2 = new HBox(240);
+		row2.getChildren().add(connectLabel);
+		row2.getChildren().add(arrow2);
+		row2.setAlignment(Pos.CENTER_LEFT);
+		
+		HBox row3 = new HBox(355);
+		row3.getChildren().add(aboutLabel);
+		row3.getChildren().add(arrow3);
+		row3.setAlignment(Pos.CENTER_LEFT);
+			
+		VBox selections = new VBox(10);
+		selections.getChildren().add(row1);
+		selections.getChildren().add(row2);
+		selections.getChildren().add(row3);
+
+		FlowPane pane = new FlowPane(Orientation.VERTICAL);
+		pane.getChildren().add(settingsLabel);
+		pane.setMargin(settingsLabel, new Insets(10, 20, 20, 200));
+		
+		pane.setPrefSize(500, 725);
+		pane.setMinSize(500,  725);
+		pane.setMaxSize(500,  725);
+		
+		pane.getChildren().add(selections);
+		pane.setMargin(selections, new Insets(10, 10, 10, 10));
+		
+		pane.getChildren().add(logOut);
+		pane.setMargin(logOut, new Insets(20, 20, 20, 200));
+
+
+		return pane;
+		
+	}
+	
+	public Node buildBrowsePane() throws IOException {
+		
+		TableView<Song> playRecent = new TableView<Song>();
+		playRecent.setPrefSize(450, 200);
+		TableColumn<Song, String> rSongs = new TableColumn<Song, String>("Song");
+		rSongs.setMinWidth(450/3);
+		rSongs.setCellValueFactory(new PropertyValueFactory<Song, String>("name"));
+		TableColumn<Song, String> rArtist = new TableColumn<Song, String>("Artist");
+		rArtist.setMinWidth(450/3);
+		rArtist.setCellValueFactory(new PropertyValueFactory<Song, String>("artist"));
+		TableColumn<Song, String> rAlbum = new TableColumn<Song, String>("Album");
+		rAlbum.setMinWidth(450/3);
+		rAlbum.setCellValueFactory(new PropertyValueFactory<Song, String>("album"));
+		
+		playRecent.setItems(buildSongList());
+		playRecent.getColumns().addAll(rSongs, rArtist, rAlbum);
+		
+		playRecent.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Object>() {
+			
+			@Override
+			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
+				if (playRecent.getSelectionModel().getSelectedItem() != null) {
+					selectedSong = playRecent.getSelectionModel().getSelectedItem();
+					System.out.println("User selected " + playRecent.getSelectionModel().getSelectedItem().getName());
+					songPane = buildSongPane(selectedSong, "Browse");
+					root.setCenter(songPane);
+				}
+			}
+		
+		});
+		
+		TableView<Song> newReleases = new TableView<Song>();
+		newReleases.setPrefSize(450, 200);
+		
+		TableColumn<Song, String> nSongs = new TableColumn<Song, String>("Song");
+		nSongs.setMinWidth(450/3);
+		nSongs.setCellValueFactory(new PropertyValueFactory<Song, String>("name"));
+		TableColumn<Song, String> nArtist = new TableColumn<Song, String>("Artist");
+		nArtist.setMinWidth(450/3);
+		nArtist.setCellValueFactory(new PropertyValueFactory<Song, String>("artist"));
+		TableColumn<Song, String> nAlbum = new TableColumn<Song, String>("Album");
+		nAlbum.setMinWidth(450/3);
+		nAlbum.setCellValueFactory(new PropertyValueFactory<Song, String>("album"));
+		newReleases.setItems(buildSongList());
+		newReleases.getColumns().addAll(nSongs, nArtist, nAlbum);
+		
+		newReleases.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Object>() {
+			
+			@Override
+			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
+				if (newReleases.getSelectionModel().getSelectedItem() != null) {
+					selectedSong = newReleases.getSelectionModel().getSelectedItem();
+					System.out.println("User selected " + newReleases.getSelectionModel().getSelectedItem().getName());
+					songPane = buildSongPane(selectedSong, "Browse");
+					root.setCenter(songPane);
+				}
+			}
+		
+		});
+		
+		browseLabel = new Label("Browse");
+		browseLabel.setFont(new Font("arial", 32));
+		browseLabel.setPrefSize(400, 50);
+		browseLabel.setAlignment(Pos.CENTER);
+		
+		recentlyPlayed = new Label("Recently Played");
+		recentlyPlayed.setFont(new Font("arial", 20));
+		recentlyPlayed.setPrefSize(400, 50);
+		
+		newRelease = new Label("New Releases");
+		newRelease.setFont(new Font("arial", 20));
+		newRelease.setPrefSize(400, 50);
+		
+		ScrollPane row1 = new ScrollPane();
+		ScrollPane row2 = new ScrollPane();
+		ScrollPane pane = new ScrollPane();
+		
+		pane.setPrefSize(450, 600);
+		
+		row1.setPrefSize(450, 200);
+		row1.setHbarPolicy(ScrollBarPolicy.NEVER);
+		row2.setPrefSize(450, 200);
+		row2.setHbarPolicy(ScrollBarPolicy.NEVER);
+		
+		row1.setContent(playRecent);
+		row2.setContent(newReleases);
+		
+		VBox vbox = new VBox();
+		vbox.getChildren().add(browseLabel);
+		vbox.setMargin(browseLabel, new Insets(10, 10, 10, 10));
+		vbox.getChildren().add(recentlyPlayed);
+		vbox.setMargin(recentlyPlayed, new Insets(10, 10, 10, 10));
+		vbox.getChildren().add(row1);
+		vbox.setMargin(row1, new Insets(10, 10, 10, 10));
+		vbox.getChildren().add(newRelease);
+		vbox.setMargin(newRelease, new Insets(10, 10, 10, 10));
+		vbox.getChildren().add(row2);
+		vbox.setMargin(row2, new Insets(10, 10, 10, 10));
+		
+		pane.setContent(vbox);
+		
+		return pane;
+	
+		
 	}
 	
 	public Node buildPlaylistPane(String plName) {
