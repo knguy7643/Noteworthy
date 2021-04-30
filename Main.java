@@ -8,7 +8,6 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.function.Predicate;
-
 import javafx.application.Application;
 import javafx.beans.value.ChangeListener;
 import javafx.beans.value.ObservableValue;
@@ -19,7 +18,6 @@ import javafx.event.ActionEvent;
 import javafx.event.EventHandler;
 import javafx.geometry.Pos;
 import javafx.stage.Stage;
-import javafx.util.Callback;
 import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.layout.Border;
@@ -34,7 +32,6 @@ import javafx.scene.text.Font;
 import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.control.ScrollPane.ScrollBarPolicy;
-import javafx.scene.control.TableCell;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Pane;
 import javafx.scene.layout.VBox;
@@ -46,6 +43,7 @@ import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.media.Media;
 import javafx.scene.media.MediaPlayer;
+import javafx.scene.media.MediaPlayer.Status;
 import javafx.scene.media.MediaView;
 import javafx.scene.paint.Color;
 
@@ -60,6 +58,7 @@ public class Main extends Application {
 	private Node settingsPane;
 	private Node newPlaylistPane;
 	private Node songPane;
+	private Node songSheetMusicPane;
 	
 	// Private variables for the navigation bar.
 	private Node navigationBar;
@@ -82,6 +81,13 @@ public class Main extends Application {
 	private Playlist selectedPlaylist;
 	private Song selectedSong;
 	
+	// Private variable for the Search Pane
+	
+	private TableView<Song> table;
+	private ObservableList<Song> songlist = FXCollections.observableArrayList();
+	private Button goButton;
+	private TextField searchBox;
+	
 	// Private variable for the Song Pane
 	private Label songNameLabel;
 	private Button backToPlaylist;
@@ -93,16 +99,10 @@ public class Main extends Application {
 	private Button songPause;
 	private Button songNext;
 	private Button songPrev;
-	
-	// Private variable for the Search Pane
-	
-	private TableView<Song> table;
-	private ObservableList<Song> songlist = FXCollections.observableArrayList();
-	private Button goButton;
-	private TextField searchBox;
+	private Button backToSong;
+	private ImageView songSheetView;
 	
 	// Private variable for the Add To Playlist Pane
-	
 	private Node addToPlaylistPane;
 	
 	// Action Handler to deal with the user's inputs. 
@@ -125,7 +125,7 @@ public class Main extends Application {
 	
 			libraryPane = buildLibraryPane();
 			searchPane = buildSearchPane();
-			//settingsPane = (new SettingsPane()).buildSettingsPane(); Marked grey since images in settings pane aren't in resource folder yet.
+			//settingsPane = (new SettingsPane()).buildSettingsPane();
 			newPlaylistPane = buildNewPLPane();
 			
 			root = new BorderPane();
@@ -350,35 +350,76 @@ public class Main extends Application {
 		songNameLabel.setMinWidth(250);
 		songNameLabel.setAlignment(Pos.CENTER);
 		songNameLabel.relocate(125, 390);
-
-		pane.getChildren().add(songImageView);
-		pane.getChildren().add(songNameLabel);
 		
 		songPlay = new Button("|>");
 		songPlay.setFont(new Font(15));
-		songPlay.relocate(450, 450);
 		songPlay.setOnAction(actionHandler);
 		
-		HBox songNav = new HBox();
+		songPause = new Button("||");
+		songPause.setFont(new Font(15));
+		songPause.setOnAction(actionHandler);
 		
-		pane.getChildren().add(songPlay);
+		songPrev = new Button("<<");
+		songPrev.setFont(new Font(15));
+		songPrev.setOnAction(actionHandler);
+		
+		songNext = new Button(">>");
+		songNext.setFont(new Font(15));
+		songNext.setOnAction(actionHandler);
+		
+		songSheetMusic = new Button("Sheet Music");
+		songSheetMusic.setFont(new Font(15));
+		songSheetMusic.setOnAction(actionHandler);
+		
+		HBox songNav = new HBox(10);
+		songNav.getChildren().add(songPrev);
+		songNav.getChildren().add(songPlay);
+		songNav.getChildren().add(songPause);
+		songNav.getChildren().add(songNext);
+		songNav.getChildren().add(songSheetMusic);
+		songNav.relocate(125, 600);
+		songNav.setMaxWidth(300);
+		songNav.setMinWidth(300);
+		songNav.setMaxHeight(40);
+		songNav.setMinHeight(40);
+		
+		media = new Media(new File("src/resources/" + selectedSong.getAudioFile()).toURI().toString());
+		mediaplayer = new MediaPlayer(media);
+		mediaplayer.setVolume(30);
+		mediaview = new MediaView(mediaplayer);
+	
+		pane.getChildren().add(songImageView);
+		pane.getChildren().add(songNameLabel);
+		pane.getChildren().add(songNav);
+		pane.getChildren().add(mediaview);
 		
 		return pane;
 	}
 	
-	public void play(Song s) {
+	public Node buildSongSheetMusicPane(Song s) {
+		Pane sheetPane = new Pane();
 		
-		media = new Media(new File("src/resources/" + selectedSong.getAudioFile()).toURI().toString());
+		backToSong = new Button("<-");
+		backToSong.setFont(new Font(15));
+		backToSong.setOnAction(actionHandler);
+		backToSong.relocate(10, 10);
 		
-		mediaplayer = new MediaPlayer(media);
+		songSheetView = new ImageView();
 		
-		mediaplayer.setVolume(30);
+		String songSheetFilename = "src/resources/" + selectedSong.getSheetMusic();
 		
-		mediaview = new MediaView(mediaplayer);
+		Image songSheetImage = new Image(new File(songSheetFilename).toURI().toString());
 		
-		mediaplayer.play();
+		songSheetView = new ImageView();
+		songSheetView.setImage(songSheetImage);
+		songSheetView.relocate(10, 50);
+		songSheetView.setFitHeight(600);
+		songSheetView.setFitWidth(480);
 		
-		System.out.println("Playing" + selectedSong.getName());
+		sheetPane.getChildren().add(backToSong);
+		sheetPane.getChildren().add(songSheetView);
+		
+		return sheetPane;
 	}
 	
 	public Node buildNewPLPane() {
@@ -412,12 +453,7 @@ public class Main extends Application {
 		return newPlaylistPane;
 	}
 	
-	
-	// Search Pane Methods
-	
 	public Node buildSearchPane() throws IOException {
-		
-		actionHandler = new ActionHandler();
 		
 		Label searchLabel = new Label("Search");
 		searchLabel.setFont(new Font("arial", 32));
@@ -458,14 +494,13 @@ public class Main extends Application {
 			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
 				
 				if (table.getSelectionModel().getSelectedItem() != null) {
-				addToPlaylistPane = buildAddToPlaylistPane(table.getSelectionModel().getSelectedItem());
-				
-				System.out.println("User selected " + table.getSelectionModel().getSelectedItem().getName());
-				
-				root.setCenter(addToPlaylistPane);
+					addToPlaylistPane = buildAddToPlaylistPane(table.getSelectionModel().getSelectedItem());
+
+					System.out.println("User selected " + table.getSelectionModel().getSelectedItem().getName());
+
+					root.setCenter(addToPlaylistPane);
 				}
-				
-				return;
+
 			}
 			
 		});
@@ -584,7 +619,6 @@ public class Main extends Application {
 		return songlist;
 	}
 
-
 	public final class FilterPredicate
 		implements Predicate<Song>
 	{
@@ -655,22 +689,79 @@ public class Main extends Application {
 				root.setCenter(playListPane);
 			}
 			else if (source == songPlay) {
-				play(selectedSong);
+				if (mediaplayer.getStatus() != Status.PLAYING) {
+					mediaplayer.play();
+				}
 			}
-			
+			else if (source == songPrev) {
+				if (mediaplayer.getStatus() == Status.PLAYING) {
+					mediaplayer.pause();
+				}
+				
+				int idxCurrSong = selectedPlaylist.getIndex(selectedSong);
+				
+				if (idxCurrSong == 0) {
+					selectedSong = selectedPlaylist.getSong(selectedPlaylist.size() - 1);
+					
+					root.setCenter(buildSongPane(selectedSong, "Playlist"));
+				}
+				else {
+					selectedSong = selectedPlaylist.getSong(idxCurrSong - 1); 
+					
+					root.setCenter(buildSongPane(selectedSong, "Playlist"));
+				}
+ 				
+				mediaplayer.play();
+				
+			}
+			else if (source == songPause) {
+				if (mediaplayer.getStatus() == Status.PLAYING) {
+					mediaplayer.pause();
+				}
+			}
+			else if (source == songNext) {
+				
+				if (mediaplayer.getStatus() == Status.PLAYING) {
+					mediaplayer.pause();
+				}
+				
+				int idxCurrSong = selectedPlaylist.getIndex(selectedSong);
+				
+				if (idxCurrSong + 1 < selectedPlaylist.size()) {
+					selectedSong = selectedPlaylist.getSong(idxCurrSong + 1);
+					
+					root.setCenter(buildSongPane(selectedSong, "Playlist"));
+				}
+				else if (idxCurrSong + 1 >= selectedPlaylist.size()) {
+					selectedSong = selectedPlaylist.getSong(0);
+					
+					root.setCenter(buildSongPane(selectedSong, "Playlist"));
+				}
+				
+				mediaplayer.play();
+				
+			}
+			else if (source == songSheetMusic) {
+				songSheetMusicPane = buildSongSheetMusicPane(selectedSong);
+				
+				root.setCenter(songSheetMusicPane);
+			}
 			else if (source == searchBox || source == goButton) {
 				
 				updateFilter();
 			}
+			else if (source == backToSong) {
+				root.setCenter(buildSongPane(selectedSong, "Playlist"));
+			}
 		}
-		
-		private void	updateFilter()
-		{
-		
-			Predicate<Song>		predicate = new FilterPredicate();
+	}
+	
+	private void	updateFilter()
+	{
+	
+		Predicate<Song>		predicate = new FilterPredicate();
 
-			table.setItems(new FilteredList<Song>(songlist, predicate));
-		}
+		table.setItems(new FilteredList<Song>(songlist, predicate));
 	}
 	
 	public ArrayList<Playlist> loadPlayList(String filename) throws IOException {
