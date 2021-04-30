@@ -457,11 +457,15 @@ public class Main extends Application {
 			@Override
 			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
 				
+				if (table.getSelectionModel().getSelectedItem() != null) {
 				addToPlaylistPane = buildAddToPlaylistPane(table.getSelectionModel().getSelectedItem());
 				
 				System.out.println("User selected " + table.getSelectionModel().getSelectedItem().getName());
 				
 				root.setCenter(addToPlaylistPane);
+				}
+				
+				return;
 			}
 			
 		});
