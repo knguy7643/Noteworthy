@@ -1,12 +1,12 @@
-package application;
+/*package application;
 
 import java.io.BufferedReader;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.function.Predicate;
 
+import javafx.beans.value.ChangeListener;
+import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.collections.transformation.FilteredList;
@@ -16,11 +16,12 @@ import javafx.geometry.Pos;
 import javafx.scene.Node;
 import javafx.scene.control.Button;
 import javafx.scene.control.Label;
+import javafx.scene.control.ListView;
 import javafx.scene.control.ScrollPane;
-import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
+import javafx.scene.control.ScrollPane.ScrollBarPolicy;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.Border;
 import javafx.scene.layout.BorderPane;
@@ -38,7 +39,7 @@ public class SearchPane {
 
 	private TableView<Song> table;
 	private ObservableList<Song> songlist = FXCollections.observableArrayList();
-	private Button searchButton;
+	private Button goButton;
 	private TextField searchBox;
 	private EventHandler<ActionEvent> actionHandler;
 	
@@ -56,14 +57,14 @@ public class SearchPane {
 		searchBox = new TextField();
 		searchBox.setOnAction(actionHandler);
 		
-		searchButton = new Button("Go");
-		searchButton.setOnAction(actionHandler);
+		goButton = new Button("Go");
+		goButton.setOnAction(actionHandler);
 		
 		VBox top = new VBox();
 		HBox center = new HBox();
 		
 		top.getChildren().add(searchLabel);
-		center.getChildren().addAll(searchBox, searchButton);
+		center.getChildren().addAll(searchBox, goButton);
 		center.setAlignment(Pos.CENTER);
 		top.getChildren().add(center);
 		top.setAlignment(Pos.CENTER);
@@ -108,6 +109,49 @@ public class SearchPane {
 		return table;
 	}
 	
+	public Node buildAddToPlaylistPane() {
+		
+		Label addLabel = new Label("Your Library");
+		addLabel.setFont(new Font("arial", 32));
+		addLabel.setPrefSize(400, 75);
+		addLabel.setMinSize(400, 75);
+		addLabel.setMaxSize(400, 75);
+		addLabel.setAlignment(Pos.CENTER);
+		
+		HBox topComponents = new HBox();
+		
+		topComponents.getChildren().add(addLabel);
+		topComponents.setAlignment(Pos.CENTER);
+		topComponents.setMaxSize(500, 100);
+		topComponents.setMinSize(500, 100);
+		
+		ScrollPane addToPlaylistLibrary = new ScrollPane();
+		addToPlaylistLibrary.setVbarPolicy(ScrollBarPolicy.ALWAYS);
+		addToPlaylistLibrary.setPrefViewportHeight(600);
+		addToPlaylistLibrary.setPrefViewportWidth(450);
+		addToPlaylistLibrary.setMaxSize(450, 600);
+		addToPlaylistLibrary.setMinSize(450, 600);
+		addToPlaylistLibrary.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+		
+		BorderPane addToPlaylist = new BorderPane();
+		
+		addToPlaylist.setPrefSize(500, 725);
+		addToPlaylist.setMinSize(500, 725);
+		addToPlaylist.setMaxSize(500, 725);
+		
+		addToPlaylist.setTop(topComponents);
+		//libraryPane.setCenter(playlistListLibrary);
+		
+		ListView<Playlist> listPlaylists = new ListView<>();
+		
+		listPlaylists.setMaxSize(450, 600);
+		listPlaylists.setMinSize(450, 600);
+		
+		addToPlaylist.setCenter(listPlaylists);
+		
+		return addToPlaylist;	
+	}
+	
 	public ObservableList<Song> buildSongList() throws IOException {
 		
 		BufferedReader input = new BufferedReader(new FileReader("songlist.txt"));
@@ -148,13 +192,12 @@ public class SearchPane {
 		public void handle(ActionEvent e) {
 			Object source = e.getSource();
 			
-			if (source == searchBox) {
+			if (source == searchBox || source == goButton) {
 				
 				updateFilter();
-			}
-			else if (source == searchButton) {
-		
-				updateFilter();
+				
+			//	root.setCenter(buildAddToPlaylistPane());
+			
 			}
 		}
 		
@@ -165,5 +208,8 @@ public class SearchPane {
 
 			table.setItems(new FilteredList<Song>(songlist, predicate));
 		}
+		
+		
 	}
 }
+*/
