@@ -62,78 +62,142 @@ public class Main extends Application {
 	
 	private BorderPane root;
 	
-	// Private variables for each of the different panes.
-	private Node browsePane;
-	private Node libraryPane;
-	private Node newPlaylistPane;
-	private Node searchPane;
-	private Node settingsPane;
-	private Node songPane;
-	private Node songSheetMusicPane;
+	// The browse pane is one of the main four panes (1/4) in the application and consists of two tables of songs, "Recently Played" and "New Releases".
+	private Node paneBrowse;
+	// The library pane is one of the main four panes (2/4) in the application and consists of a table that displays a list of the user's playlist and a button to create a new playlist.
+	private Node paneLibrary;
+	// The Create Playlist pane is utilized when the user is trying to create a new playlist.
+	private Node paneCreatePlaylist;
+	// The Search pane is one of the main four panes (3/4) in the application that will allow the user to search songs by name or artist name.
+	private Node paneSearch;
+	// The Settings pane is one of the main four panes (4/4) in the application that will provide the user with "Account/Privacy", "Connected Devices", and "About" information. 
+	private Node paneSettings;
+	// The Song pane is built to display the song's poster, song's name, song's progress bar, song navigation buttons, and song's sheet music button for the currently selected song.
+	private Node paneSong;
+	// The Song's Sheet Music Pane will display the sheet music for the currently playing song. 
+	private Node paneSongSheetMusicView;
+	// The Playlist pane is build to display the list of songs in the playlist 
+	private Node panePlaylist;
 	
-	// Private variables for the navigation bar.
+	
+	
+	// The Navigation Bar will hold the buttons that will allow the user to move between the main four panes and will sit at the bottom of the window. 
 	private Node navigationBar;
-	private Button browseButton;
-	private Button libraryButton;
+	// The Browse button lies in the navigation bar and changes the user's view to the browse pane.
+	private Button navBarBrowse;
+	// The Library button lies in the navigation bar and changes the user's view to the library pane.
+	private Button navBarLibrary;
+	// The Search button lies in the navigation bar and changes the user's view to the search pane.
 	private Button searchButton;
+	// The Settings button lies in the navigation bar and changes the user's view to the settings pane. 
 	private Button settingsButton;
-	
-	// Private variables for the Library Pane
-	private ArrayList<Playlist> playlistList;
-	private Button addPlayListButton;
+	// This navigation button will send the user back to the Browse pane.
+	private Button backToBrowse;
+	// This navigation button will send the user back to the Library pane.
 	private Button backToLibrary;
-	private Button newPLSubmit;
-	private Label libraryLabel;
-	private Label newPLLabel;
+	// This navigation button will send the user back to the Playlist pane.
+	private Button backToPlaylist;
+	// This navigation button will send the user back to the Search pane.
+	private Button backToSearch;
+	// This navigation button will send the user back to the Song pane.
+	private Button backToSong;
+	
+	
+	
+	// A label to indicate to the user that they are currently in the Library pane. 
+	private Label libraryPaneLabel;
+	// The "Add Playlist" button will be used to display the create playlist pane.
+	private Button createPlaylistButton;
+	// The "Submit" button to take the user's input and creates a new playlist with the input as the playlist's name.
+	private Button createPlaylistSubmitButton;
+	// A label to prompt the user to create a new playlist.
+	private Label createPlaylistLabel;
+	// A text field to take the user's input for new playlist name.
+	private TextField createPlaylistTextfield;
+	// A label for the name of the currently displayed playlist.
 	private Label playlistNameLabel;
+	// The list of playlist stored by the library.
 	private ListView<String> listLibrary;
+	// The ArrayList of playlist in the library.
+	private ArrayList<Playlist> playlistList;
+	// Stoes a list of songs in a playlist.
 	private ListView<String> listSongs;
-	private Node playListPane;
-	private Playlist selectedPlaylist;
-	private Song selectedSong;
-	private TextField newPLTextfield;
 	
-	// Private variables for Settings Pane
-	private Button logOut;
-	private ImageView arrow1, arrow2, arrow3;
+	
+	
+	// A button in the settings pane to allow the user to "Log Out".
+	private Button settingsLogOut;
+	// The arrows to expand and display info for "Account/Privacy", "Connected Devices", and "About".
+	private ImageView settingsArrow1, settingsArrow2, settingsArrow3;
+	// A label to indicate to the user that they are currently in the Settings pane.
 	private Label settingsLabel;
-	private Label accountLabel;
-	private Label connectLabel;
-	private Label aboutLabel;
+	// A label to indicate the section related to "Account/Privacy" information.
+	private Label settingsAccountLabel;
+	// A label to indicate the section related to "Connected Devices" information.
+	private Label settingsConnectLabel;
+	// A label to indicate the section related to "About" information.
+	private Label settingsAboutLabel;
 	
-	// Private variables for Browse Pane
+	
+	
+	// A  label to indicate to the user that they are in the Browse pane.
 	private Label browseLabel;
-	private Label recentlyPlayed;
-	private Label newRelease;
+	// A label for the "Recently Played" chart of songs. 
+	private Label browseRecentlyPlayed;
+	// A label for the "New Releases" chart of songs.
+	private Label browseNewRelease;
 	
-	// Private variable for the Search Pane
-	private Button goButton;
+	
+	
+	// An interactable list of songs. 
 	private ObservableList<Song> songlist = FXCollections.observableArrayList();
-	private TableView<Song> table;
+	// A button to update the table based on the search string.
+	private Button searchGoButton;
+	// The table of searched songs.
+	private TableView<Song> searchTable;
+	// A text field where the user can input the string that they would like to use to search for songs or songs by an artist whose name containts the inputted string.
 	private TextField searchBox;
 	
-	// Private variable for the Song Pane
-	private Button backToBrowse;
-	private Button backToPlaylist;
-	private Button backToSearch;
-	private Button backToSong;
+	
+	
+	// A button to open the window with the song's sheet music.
 	private Button songSheetMusic;
+	// A button to begin playing the song. Known Bug: Pressing "Play" while the song is play will cause the song to start playing from the beginning. 
 	private Button songPlay;
+	// A button to pause the playing song.
 	private Button songPause;
+	// A button to move to the next song in the playlist and automatically start playing it. If this song is the last song in the playlist, it will move to the first song in the playlist.
 	private Button songNext;
+	// A button to move to the previous song in the playlist and automatically start playing it. If this song is the first song in the playlist, it will move to the last song in the playlist.
 	private Button songPrev;
+	// The ImageView object to display the song's poster iamge.
 	private ImageView songImageView;
+	// The ImageView object to display the song's music sheet as an image. 
 	private ImageView songSheetView;
+	// The label to display the name of the song.
 	private Label songNameLabel;
+	// The song's progress play bar.
 	private Slider songTime;
 	
-	// Private variable for the Add To Playlist Pane
+	
+	
+	// Variable that should be stored using a controller object.
+	private Playlist selectedPlaylist;
+	private Song selectedSong;
+
+	
+	
+	// The pane that prompts the user to select a playlist to add the song to.
 	private Node addToPlaylistPane;
 	
-	// Action Handler to deal with the user's inputs. 
+	
+	
+	// Action Handler to deal with the user's inputs from buttons. 
 	private EventHandler<ActionEvent> actionHandler;
 	
-	// Private variables for the playing of music.
+	
+	
+	// Private variables for the objectilized for the playing of music.
 	private Media media;
 	private MediaPlayer mediaplayer;
 	
@@ -143,22 +207,34 @@ public class Main extends Application {
 	@Override
 	public void start(Stage primaryStage) {
 		try {
+			
+			// Load in the user's existing playlist library.
 			playlistList = loadPlayList("src/resources/playlist.txt");
 			
+			// Builds the action handler to manage the application's various buttons.
 			actionHandler = new ActionHandler();
 	
-			browsePane = buildBrowsePane();
-			libraryPane = buildLibraryPane();
-			searchPane = buildSearchPane();
-			settingsPane = buildSettingsPane();
-			newPlaylistPane = buildNewPLPane();
+			// Build the application main four panes.
+			paneBrowse = buildBrowsePane();
+			paneLibrary = buildLibraryPane();
+			paneSearch = buildSearchPane();
+			paneSettings = buildSettingsPane();
 			
+			// Build the pane for when the user seeks to create a new playlist.
+			paneCreatePlaylist = buildNewPLPane();
+			
+			// Build application's library of songs.
+			songlist = buildSongList();
+			
+			// This variable will serves as the parent node of our application.
 			root = new BorderPane();
 			
+			// Build the navigation bar that will allow the user to move between the main four panes.
 			navigationBar = buildMenuBar();
 			
+			// Set the nagivation bar at the bottom of the window and load in the browse pane to act as the home screen.
 			root.setBottom(navigationBar);
-			root.setCenter(browsePane);
+			root.setCenter(paneBrowse);
 			
 			Scene scene = new Scene(root,500,800);
 			//scene.getStylesheets().add(getClass().getResource("application.css").toExternalForm()); //Marked out since "application.css" wasn't present, thus causing a Null Pointer Exception.
@@ -177,66 +253,82 @@ public class Main extends Application {
 		launch(args);
 	}
 	
-	// This method is used to build the navigation bar that will allow the user to move between brwosing, searching, or their own library.
+	/* This method is used to build the navigation bar that will allow the user to move between brwosing, searching, or their own library.
+	 * Written by Khoa-chau Nguyen
+	 */
 	public Node buildMenuBar() {
 		
+		// Utilizes an HBox to have the four navigation pane buttons horizontally aligned. 
 		HBox menuBar = new HBox();
 		
+		// Create a font to maintain consistency accross the 4 navigation bar buttons.
 		Font font = new Font(20);
 		
-		browseButton = new Button ("Browse");
-		browseButton.setMaxSize(125, 75);
-		browseButton.setMinSize(125, 75);
-		browseButton.setOnAction(actionHandler);
-		browseButton.setFont(font);
+		// Build the navigation bar's Browse pane button. 
+		navBarBrowse = new Button ("Browse");
+		navBarBrowse.setMaxSize(125, 75);
+		navBarBrowse.setMinSize(125, 75);
+		navBarBrowse.setOnAction(actionHandler);
+		navBarBrowse.setFont(font);
 		
-		libraryButton = new Button("Library");
-		libraryButton.setMaxSize(125, 75);
-		libraryButton.setMinSize(125, 75);
-		libraryButton.setOnAction(actionHandler);
-		libraryButton.setFont(font);
+		// Build the navigation bar's Library pane button. 
+		navBarLibrary = new Button("Library");
+		navBarLibrary.setMaxSize(125, 75);
+		navBarLibrary.setMinSize(125, 75);
+		navBarLibrary.setOnAction(actionHandler);
+		navBarLibrary.setFont(font);
 		
+		// Build the navigation bar's Search pane button.
 		searchButton = new Button("Search");
 		searchButton.setMaxSize(125, 75);
 		searchButton.setMinSize(125, 75);
 		searchButton.setOnAction(actionHandler);
 		searchButton.setFont(font);
 		
+		// Build the navigation bar's Settings pane button.
 		settingsButton = new Button("Settings");
 		settingsButton.setMaxSize(125, 75);
 		settingsButton.setMinSize(125, 75);
 		settingsButton.setOnAction(actionHandler);
 		settingsButton.setFont(font);
 		
-		menuBar.getChildren().addAll(browseButton, libraryButton, searchButton, settingsButton);
+		// Add the navigation buttons to the bar in the order of Browse -> Library -> Search -> Settings.
+		menuBar.getChildren().addAll(navBarBrowse, navBarLibrary, searchButton, settingsButton);
 		
 		return menuBar;
 	}
 	
-	// This method is used to build the library pane that will display all of the user's playlist with the option to create new playlists.
+	/* This method is used to build the library pane that will display all of the user's playlist with the option to create new playlists.
+	 * Written by Khoa-chau Nguyen
+	 */
 	public Node buildLibraryPane() {
-		libraryLabel = new Label("Your Library");
-		libraryLabel.setFont(new Font("arial", 32));
-		libraryLabel.setPrefSize(400, 75);
-		libraryLabel.setMinSize(400, 75);
-		libraryLabel.setMaxSize(400, 75);
-		libraryLabel.setAlignment(Pos.CENTER);
 		
-		addPlayListButton = new Button("+");
-		addPlayListButton.setFont(new Font(15));
-		addPlayListButton.setMinSize(40, 40);
-		addPlayListButton.setMaxSize(40, 40);
-		addPlayListButton.setAlignment(Pos.CENTER);
-		addPlayListButton.setOnAction(actionHandler);
+		// Build a label to indicate that this is the user's library.
+		libraryPaneLabel = new Label("Your Library");
+		libraryPaneLabel.setFont(new Font("arial", 32));
+		libraryPaneLabel.setPrefSize(400, 75);
+		libraryPaneLabel.setMinSize(400, 75);
+		libraryPaneLabel.setMaxSize(400, 75);
+		libraryPaneLabel.setAlignment(Pos.CENTER);
 		
+		// Build the button for the ability for the user to create a new playlist.
+		createPlaylistButton = new Button("+");
+		createPlaylistButton.setFont(new Font(15));
+		createPlaylistButton.setMinSize(40, 40);
+		createPlaylistButton.setMaxSize(40, 40);
+		createPlaylistButton.setAlignment(Pos.CENTER);
+		createPlaylistButton.setOnAction(actionHandler);
+		
+		// Use an HBox to store the label and button components. 
 		HBox topComponents = new HBox();
 		
-		topComponents.getChildren().add(libraryLabel);
-		topComponents.getChildren().add(addPlayListButton);
+		topComponents.getChildren().add(libraryPaneLabel);
+		topComponents.getChildren().add(createPlaylistButton);
 		topComponents.setAlignment(Pos.CENTER);
 		topComponents.setMaxSize(500, 100);
 		topComponents.setMinSize(500, 100);
 		
+		// Construct a pane to display the list of playlist in the library. 
 		BorderPane libraryPane = new BorderPane();
 		
 		libraryPane.setPrefSize(500, 725);
@@ -254,15 +346,16 @@ public class Main extends Application {
 		listLibrary.setMaxSize(450, 600);
 		listLibrary.setMinSize(450, 600);
 		
+		// Gives the playlist objects in the library the ability when selected to open the playlist and display a list of songs in the playlist.
 		listLibrary.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Object>() {
 
 			@Override
 			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
 				System.out.println("User selected " + listLibrary.getSelectionModel().getSelectedItem() + " playlist.");
 				
-				playListPane = buildPlaylistPane(listLibrary.getSelectionModel().getSelectedItem());
+				panePlaylist = buildPlaylistPane(listLibrary.getSelectionModel().getSelectedItem());
 				
-				root.setCenter(playListPane);
+				root.setCenter(panePlaylist);
 			}
 			
 		});
@@ -272,57 +365,66 @@ public class Main extends Application {
 		return libraryPane;	
 	}
 	
-	// This method is used to build the settings pane that will allow the user to check various information regarding the application.
+	/* This method is used to build the settings pane that will allow the user to check various information regarding the application.
+	 * Written by Gretchen Hollrah
+	 */
 	public Node buildSettingsPane() {
+		
+		// Declare fonts in advance for consistency in usage.
 		Font btnFont = Font.font("arial", FontWeight.BOLD, 18.0);
 		Font lblFont = Font.font("arial", 22.0);
 		
+		// Build label to indicate that this is the Settings pane.
 		settingsLabel = new Label("Settings");
-		
 		settingsLabel.setFont(new Font("arial", 32));
 		settingsLabel.setPrefSize(400,  75);
 		
-		accountLabel = new Label("Account/Privacy Settings");
-		accountLabel.setFont(lblFont);
-		accountLabel.setPrefHeight(75);
+		// Build label for the "Account/Privacy Settings" section.
+		settingsAccountLabel = new Label("Account/Privacy Settings");
+		settingsAccountLabel.setFont(lblFont);
+		settingsAccountLabel.setPrefHeight(75);
 		
-		connectLabel = new Label("Connect Devices");
-		connectLabel.setFont(lblFont);
-		connectLabel.setPrefHeight(75);
+		// Build label for the "Connected Devices" section.
+		settingsConnectLabel = new Label("Connected Devices");
+		settingsConnectLabel.setFont(lblFont);
+		settingsConnectLabel.setPrefHeight(75);
 		
-		aboutLabel = new Label("About");
-		aboutLabel.setFont(lblFont);
-		aboutLabel.setPrefHeight(75);
+		// Build label for the "About" section.
+		settingsAboutLabel = new Label("About");
+		settingsAboutLabel.setFont(lblFont);
+		settingsAboutLabel.setPrefHeight(75);
 		
-		logOut = new Button("Log Out");
-		logOut.setPrefSize(100, 60);
-		logOut.setFont(btnFont);
-		logOut.setOnAction(actionHandler);		
+		// Build Log Out button.
+		settingsLogOut = new Button("Log Out");
+		settingsLogOut.setPrefSize(100, 60);
+		settingsLogOut.setFont(btnFont);
+		settingsLogOut.setOnAction(actionHandler);		
 		
-		arrow1 = new ImageView(new Image(new File("src/resources/arrow.png").toURI().toString(), 30, 30, true, true));
-		arrow2 = new ImageView(new Image(new File("src/resources/arrow.png").toURI().toString(), 30, 30, true, true));
-		arrow3 = new ImageView(new Image(new File("src/resources/arrow.png").toURI().toString(), 30, 30, true, true));
+		settingsArrow1 = new ImageView(new Image(new File("src/resources/arrow.png").toURI().toString(), 30, 30, true, true));
+		settingsArrow2 = new ImageView(new Image(new File("src/resources/arrow.png").toURI().toString(), 30, 30, true, true));
+		settingsArrow3 = new ImageView(new Image(new File("src/resources/arrow.png").toURI().toString(), 30, 30, true, true));
 		
-		arrow1.setFitHeight(40);
-		arrow1.setFitWidth(40);
-		arrow2.setFitHeight(40);
-		arrow2.setFitWidth(40);
-		arrow3.setFitHeight(40);
-		arrow3.setFitWidth(40);
+		settingsArrow1.setFitHeight(40);
+		settingsArrow1.setFitWidth(40);
+		settingsArrow2.setFitHeight(40);
+		settingsArrow2.setFitWidth(40);
+		settingsArrow3.setFitHeight(40);
+		settingsArrow3.setFitWidth(40);
 		
+		// Set alignment of section labels and arrows.
 		HBox row1 = new HBox(192);
-		row1.getChildren().add(accountLabel);
-		row1.getChildren().add(arrow1);
+		row1.getChildren().add(settingsAccountLabel);
+		row1.getChildren().add(settingsArrow1);
 		row1.setAlignment(Pos.CENTER_LEFT);
 		
 		HBox row2 = new HBox(270);
-		row2.getChildren().add(connectLabel);
-		row2.getChildren().add(arrow2);
+		row2.getChildren().add(settingsConnectLabel);
+		row2.getChildren().add(settingsArrow2);
 		row2.setAlignment(Pos.CENTER_LEFT);
 		
 		HBox row3 = new HBox(380);
-		row3.getChildren().add(aboutLabel);
-		row3.getChildren().add(arrow3);
+		row3.getChildren().add(settingsAboutLabel);
+		row3.getChildren().add(settingsArrow3);
 		row3.setAlignment(Pos.CENTER_LEFT);
 			
 		VBox selections = new VBox(10);
@@ -341,18 +443,21 @@ public class Main extends Application {
 		pane.getChildren().add(selections);
 		FlowPane.setMargin(selections, new Insets(10, 10, 10, 10));
 		
-		pane.getChildren().add(logOut);
-		FlowPane.setMargin(logOut, new Insets(20, 20, 20, 200));
+		pane.getChildren().add(settingsLogOut);
+		FlowPane.setMargin(settingsLogOut, new Insets(20, 20, 20, 200));
 
 
 		return pane;
 		
 	}
 	
-	// This method is used to build the browse pane that acts as the home page of the application and will present the user with a list of recently played and newly released songs.
+	/* This method is used to build the browse pane that acts as the home page of the application and will present the user with a list of recently played and newly released songs.
+	 * Written by Gretchen Hollrah
+	 */
 	@SuppressWarnings("unchecked")
 	public Node buildBrowsePane() throws IOException {
 		
+		// Build "Recently Played" table.
 		TableView<Song> playRecent = new TableView<Song>();
 		playRecent.setPrefSize(450, 200);
 		TableColumn<Song, String> rSongs = new TableColumn<Song, String>("Song");
@@ -365,7 +470,7 @@ public class Main extends Application {
 		rAlbum.setMinWidth(450/3);
 		rAlbum.setCellValueFactory(new PropertyValueFactory<Song, String>("album"));
 		
-		playRecent.setItems(buildSongList());
+		playRecent.setItems(songlist);
 		playRecent.getColumns().addAll(rSongs, rArtist, rAlbum);
 		
 		playRecent.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Object>() {
@@ -375,16 +480,16 @@ public class Main extends Application {
 				if (playRecent.getSelectionModel().getSelectedItem() != null) {
 					selectedSong = playRecent.getSelectionModel().getSelectedItem();
 					System.out.println("User selected " + playRecent.getSelectionModel().getSelectedItem().getName());
-					songPane = buildSongPane(selectedSong, "Browse");
-					root.setCenter(songPane);
+					paneSong = buildSongPane(selectedSong, "Browse");
+					root.setCenter(paneSong);
 				}
 			}
 		
 		});
 		
+		// Build "New Releases" table.
 		TableView<Song> newReleases = new TableView<Song>();
 		newReleases.setPrefSize(450, 200);
-		
 		TableColumn<Song, String> nSongs = new TableColumn<Song, String>("Song");
 		nSongs.setMinWidth(450/3);
 		nSongs.setCellValueFactory(new PropertyValueFactory<Song, String>("name"));
@@ -394,7 +499,7 @@ public class Main extends Application {
 		TableColumn<Song, String> nAlbum = new TableColumn<Song, String>("Album");
 		nAlbum.setMinWidth(450/3);
 		nAlbum.setCellValueFactory(new PropertyValueFactory<Song, String>("album"));
-		newReleases.setItems(buildSongList());
+		newReleases.setItems(songlist);
 		newReleases.getColumns().addAll(nSongs, nArtist, nAlbum);
 		
 		newReleases.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Object>() {
@@ -404,25 +509,28 @@ public class Main extends Application {
 				if (newReleases.getSelectionModel().getSelectedItem() != null) {
 					selectedSong = newReleases.getSelectionModel().getSelectedItem();
 					System.out.println("User selected " + newReleases.getSelectionModel().getSelectedItem().getName());
-					songPane = buildSongPane(selectedSong, "Browse");
-					root.setCenter(songPane);
+					paneSong = buildSongPane(selectedSong, "Browse");
+					root.setCenter(paneSong);
 				}
 			}
 		
 		});
 		
+		// Build label to indicate that this is the Browse pane.
 		browseLabel = new Label("Browse");
 		browseLabel.setFont(new Font("arial", 32));
 		browseLabel.setPrefSize(400, 50);
 		browseLabel.setAlignment(Pos.CENTER);
 		
-		recentlyPlayed = new Label("Recently Played");
-		recentlyPlayed.setFont(new Font("arial", 20));
-		recentlyPlayed.setPrefSize(400, 50);
+		// Build label for the "Recently Played" table.
+		browseRecentlyPlayed = new Label("Recently Played");
+		browseRecentlyPlayed.setFont(new Font("arial", 20));
+		browseRecentlyPlayed.setPrefSize(400, 50);
 		
-		newRelease = new Label("New Releases");
-		newRelease.setFont(new Font("arial", 20));
-		newRelease.setPrefSize(400, 50);
+		// Build label for the "New Releases" table.
+		browseNewRelease = new Label("New Releases");
+		browseNewRelease.setFont(new Font("arial", 20));
+		browseNewRelease.setPrefSize(400, 50);
 		
 		ScrollPane row1 = new ScrollPane();
 		ScrollPane row2 = new ScrollPane();
@@ -441,12 +549,12 @@ public class Main extends Application {
 		VBox vbox = new VBox();
 		vbox.getChildren().add(browseLabel);
 		VBox.setMargin(browseLabel, new Insets(10, 10, 10, 10));
-		vbox.getChildren().add(recentlyPlayed);
-		VBox.setMargin(recentlyPlayed, new Insets(10, 10, 10, 10));
+		vbox.getChildren().add(browseRecentlyPlayed);
+		VBox.setMargin(browseRecentlyPlayed, new Insets(10, 10, 10, 10));
 		vbox.getChildren().add(row1);
 		VBox.setMargin(row1, new Insets(10, 10, 10, 10));
-		vbox.getChildren().add(newRelease);
-		VBox.setMargin(newRelease, new Insets(10, 10, 10, 10));
+		vbox.getChildren().add(browseNewRelease);
+		VBox.setMargin(browseNewRelease, new Insets(10, 10, 10, 10));
 		vbox.getChildren().add(row2);
 		VBox.setMargin(row2, new Insets(10, 10, 10, 10));
 		
@@ -457,18 +565,22 @@ public class Main extends Application {
 		
 	}
 	
-	// This method is used to build the playlist pane that displays the songs contained by the playlist.
-	public Node buildPlaylistPane(String plName) {
+	/* This method is used to build the playlist pane that displays the songs contained by the playlist.
+	 * Written by Khoa-chau Nguyen
+	 */
+	public Node buildPlaylistPane(String playlistName) {
 		
 		BorderPane songListPane = new BorderPane();
 		
-		playlistNameLabel = new Label(plName);
+		// Build label to display the name of the given playlist.
+		playlistNameLabel = new Label(playlistName);
 		playlistNameLabel.setFont(new Font("arial", 32));
 		playlistNameLabel.setPrefSize(400, 75);
 		playlistNameLabel.setMinSize(400, 75);
 		playlistNameLabel.setMaxSize(400, 75);
 		playlistNameLabel.setAlignment(Pos.CENTER);
 		
+		// Utilize an HBox to store the label for the playlist's name and the navigation button to return to the Library pane. 
 		HBox topComponents = new HBox();
 		topComponents.getChildren().add(backToLibrary);
 		topComponents.getChildren().add(playlistNameLabel);
@@ -476,15 +588,17 @@ public class Main extends Application {
 		topComponents.setMaxSize(500, 100);
 		topComponents.setMinSize(500, 100);
 		
+		// Sets the selected playlist as the playlist whose name matches the given playlist name. This could be removed by the presence of a controller to maintain the selected playlist. 
 		selectedPlaylist = new Playlist();
 		
 		for (int i = 0; i < playlistList.size(); i++) {
-			if (plName.equalsIgnoreCase(playlistList.get(i).getPLName())) {
+			if (playlistName.equalsIgnoreCase(playlistList.get(i).getPLName())) {
 				selectedPlaylist = playlistList.get(i);
 				break;
 			}
 		}
 		
+		// Build the list of song from the songs in the selected playlist.
 		listSongs = new ListView<>();
 		
 		for (int j = 0; j < selectedPlaylist.size(); j++) {
@@ -494,6 +608,7 @@ public class Main extends Application {
 		listSongs.setMaxSize(450, 600);
 		listSongs.setMinSize(450, 600);
 		
+		// Makes the list of song objects interactable. When selected, a song pane with the selected song should open. 
 		listSongs.getSelectionModel().selectedIndexProperty().addListener(new ChangeListener<Object>() {
 
 			@Override
@@ -506,41 +621,44 @@ public class Main extends Application {
 					}
 				}
 				
-				songPane = buildSongPane(selectedSong, "Playlist");
+				paneSong = buildSongPane(selectedSong, "Playlist");
 				
-				root.setCenter(songPane);
+				root.setCenter(paneSong);
 				
 			}
 			
 		});
 		
+		// Sets positioning of playlist pane's components.
 		songListPane.setCenter(listSongs);
 		songListPane.setTop(topComponents);
 		
 		return songListPane;
 	}
 	
-	// This method is used to build the song pane where the user can play/pause songs and open the song's sheet music.
+	/* This method is used to build the song pane where the user can play/pause songs and open the song's sheet music.
+	 * Written by Khoa-chau Nguyen
+	 */
 	public Node buildSongPane(Song song, String prevLoc) {
 		
 		Pane pane = new Pane();
 		
 		// Depending on how the user reaches the song pane, it will apply a back button to return to the pane prior to arriving at the song pane.
-		if (prevLoc.equalsIgnoreCase("Playlist")) {
+		if (prevLoc.equalsIgnoreCase("Playlist")) { // Sends the user back to the playlist.
 			backToPlaylist = new Button("<-");
 			backToPlaylist.setFont(new Font(15));
 			backToPlaylist.setOnAction(actionHandler);
 			backToPlaylist.relocate(10, 10);
 			pane.getChildren().add(backToPlaylist);
 		}
-		else if (prevLoc.equalsIgnoreCase("Search")) {
+		else if (prevLoc.equalsIgnoreCase("Search")) { // Sends the user back to the Search pane.
 			backToSearch = new Button("<-");
 			backToSearch.setFont(new Font(15));
 			backToSearch.setOnAction(actionHandler);
 			backToSearch.relocate(10, 10);
 			pane.getChildren().add(backToSearch);
 		}
-		else if (prevLoc.equalsIgnoreCase("Browse")) {
+		else if (prevLoc.equalsIgnoreCase("Browse")) { // Sends the user back to the Browse pane.
 			backToBrowse = new Button("<-");
 			backToBrowse.setFont(new Font(15));
 			backToBrowse.setOnAction(actionHandler);
@@ -548,10 +666,12 @@ public class Main extends Application {
 			pane.getChildren().add(backToBrowse);
 		}
 		
+		// File path for the song's poster. 
 		String songImageFilename = "src/resources/" + selectedSong.getAlbum();
 		
 		Image songImage = new Image(new File(songImageFilename).toURI().toString());
 		
+		// Build the song's poster object. 
 		songImageView = new ImageView();
 		songImageView.setImage(songImage);
 		songImageView.relocate(125, 120);
@@ -559,6 +679,7 @@ public class Main extends Application {
 		songImageView.setFitWidth(250);
 		songImageView.setPreserveRatio(true);
 		
+		// Build the label for the song's name.
 		songNameLabel = new Label(selectedSong.getName());
 		songNameLabel.setFont(new Font(25));
 		songNameLabel.setMaxWidth(250);
@@ -566,26 +687,32 @@ public class Main extends Application {
 		songNameLabel.setAlignment(Pos.CENTER);
 		songNameLabel.relocate(125, 420);
 		
+		// Build the song's play button.
 		songPlay = new Button("|>");
 		songPlay.setFont(new Font(15));
 		songPlay.setOnAction(actionHandler);
 		
+		// Build the song's pause button.
 		songPause = new Button("||");
 		songPause.setFont(new Font(15));
 		songPause.setOnAction(actionHandler);
 		
+		// Build the song's previous song button.
 		songPrev = new Button("<<");
 		songPrev.setFont(new Font(15));
 		songPrev.setOnAction(actionHandler);
 		
+		// Build the song's next song button.
 		songNext = new Button(">>");
 		songNext.setFont(new Font(15));
 		songNext.setOnAction(actionHandler);
 		
+		// Build the song's sheet music button.
 		songSheetMusic = new Button("Sheet Music");
 		songSheetMusic.setFont(new Font(15));
 		songSheetMusic.setOnAction(actionHandler);
 		
+		// Add the song's buttons to form a navigation bar for the song.
 		HBox songNav = new HBox(10);
 		songNav.getChildren().add(songPrev);
 		songNav.getChildren().add(songPlay);
@@ -598,6 +725,7 @@ public class Main extends Application {
 		songNav.setMaxHeight(40);
 		songNav.setMinHeight(40);
 		
+		// Build the song's progress bar. 
 		songTime = new Slider();
 		songTime.relocate(115, 475);
 		songTime.setMaxWidth(300);
@@ -613,10 +741,13 @@ public class Main extends Application {
 		return pane;
 	}
 	
-	// This method is used to build the pane that will display the selected song's sheet music.
+	/* This method is used to build the pane that will display the selected song's sheet music.
+	 * Written by Khoa-chau Nguyen
+	 */
 	public Node buildSongSheetMusicPane(Song s) {
 		Pane sheetPane = new Pane();
 		
+		// Build the button to send the user back to the song's song pane. 
 		backToSong = new Button("<-");
 		backToSong.setFont(new Font(15));
 		backToSong.setOnAction(actionHandler);
@@ -624,6 +755,7 @@ public class Main extends Application {
 		
 		songSheetView = new ImageView();
 		
+		// File path for the song's sheet music.
 		String songSheetFilename = "src/resources/" + selectedSong.getSheetMusic();
 		
 		Image songSheetImage = new Image(new File(songSheetFilename).toURI().toString());
@@ -640,42 +772,48 @@ public class Main extends Application {
 		return sheetPane;
 	}
 	
-	// This method is used to build the pane where the user will be asked the name for their new playlist.
+	/* This method is used to build the pane where the user will be asked the name for their new playlist.
+	 * Written by Khoa-chau Nguyen
+	 */
 	public Node buildNewPLPane() {
-		Pane newPlaylistPane = new Pane();
+		Pane playlistPane = new Pane();
 		
-		newPLSubmit = new Button("Submit");
-		newPLSubmit.setFont(new Font(11));
-		newPLSubmit.setOnAction(actionHandler);
+		// Build the submit button for creating a new playlist.
+		createPlaylistSubmitButton = new Button("Submit");
+		createPlaylistSubmitButton.setFont(new Font(11));
+		createPlaylistSubmitButton.setOnAction(actionHandler);
 		
-		newPLLabel = new Label("Create A New Playlist");
-		newPLLabel.setFont(new Font(30));
-		newPLLabel.relocate(115, 300);
+		// Build label to indicate the user is creating a new playlist.
+		createPlaylistLabel = new Label("Create A New Playlist");
+		createPlaylistLabel.setFont(new Font(30));
+		createPlaylistLabel.relocate(115, 300);
 		
-		newPLTextfield = new TextField("Enter New Playlist Name");
-		newPLTextfield.setMinWidth(200);
+		// Build text field where the user can enter the name of the new playlist.
+		createPlaylistTextfield = new TextField("Enter New Playlist Name");
+		createPlaylistTextfield.setMinWidth(200);
 		
+		// Build the button to send the user back to the Library pane.
 		backToLibrary = new Button("<-");
 		backToLibrary.setFont(new Font(15));
 		backToLibrary.setOnAction(actionHandler);
 		backToLibrary.relocate(10, 10);
 		
 		HBox textField = new HBox();
-		textField.getChildren().add(newPLTextfield);
-		textField.getChildren().add(newPLSubmit);
+		textField.getChildren().add(createPlaylistTextfield);
+		textField.getChildren().add(createPlaylistSubmitButton);
 		textField.relocate(130, 340);
 		
-		newPlaylistPane.getChildren().add(newPLLabel);
-		newPlaylistPane.getChildren().add(textField);
-		newPlaylistPane.getChildren().add(backToLibrary);
+		playlistPane.getChildren().add(createPlaylistLabel);
+		playlistPane.getChildren().add(textField);
+		playlistPane.getChildren().add(backToLibrary);
 		
-		return newPlaylistPane;
+		return playlistPane;
 	}
 	
-	// This method is used to build the search pane where the user will be able to search through the application's database for select songs.
+	/* This method is used to build the search pane where the user will be able to search through the application's database for select songs.
+	 * Written by Stephen Cain
+	 */
 	public Node buildSearchPane() throws IOException {
-		
-		actionHandler = new ActionHandler();
 		
 		Label searchLabel = new Label("Search");
 		searchLabel.setFont(new Font("arial", 32));
@@ -687,14 +825,14 @@ public class Main extends Application {
 		searchBox = new TextField();
 		searchBox.setOnAction(actionHandler);
 		
-		goButton = new Button("Go");
-		goButton.setOnAction(actionHandler);
+		searchGoButton = new Button("Go");
+		searchGoButton.setOnAction(actionHandler);
 		
 		VBox top = new VBox();
 		HBox center = new HBox();
 		
 		top.getChildren().add(searchLabel);
-		center.getChildren().addAll(searchBox, goButton);
+		center.getChildren().addAll(searchBox, searchGoButton);
 		center.setAlignment(Pos.CENTER);
 		top.getChildren().add(center);
 		top.setAlignment(Pos.CENTER);
@@ -709,18 +847,18 @@ public class Main extends Application {
 		
 		searchPane.setTop(top);
 		
-		table = buildTable();
-		searchPane.setCenter(table);
+		searchTable = buildTable();
+		searchPane.setCenter(searchTable);
 		
-		table.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Object>() {
+		searchTable.getSelectionModel().selectedItemProperty().addListener(new ChangeListener<Object>() {
 
 			@Override
 			public void changed(ObservableValue<?> observable, Object oldValue, Object newValue) {
 				
-				if (table.getSelectionModel().getSelectedItem() != null) {
-				addToPlaylistPane = buildAddToPlaylistPane(table.getSelectionModel().getSelectedItem());
+				if (searchTable.getSelectionModel().getSelectedItem() != null) {
+				addToPlaylistPane = buildAddToPlaylistPane(searchTable.getSelectionModel().getSelectedItem());
 				
-				System.out.println("User selected " + table.getSelectionModel().getSelectedItem().getName());
+				System.out.println("User selected " + searchTable.getSelectionModel().getSelectedItem().getName());
 				
 				root.setCenter(addToPlaylistPane);
 				}
@@ -733,13 +871,15 @@ public class Main extends Application {
 		return searchPane;	
 	}
 
-	// The next 6 methods are involved in the search pane's song table.
+	/* The next 6 methods are involved in the search pane's song table.
+	 * Written by Stephen Cain
+	 */
 	@SuppressWarnings("unchecked")
 	public TableView<Song> buildTable() throws IOException {
 	
-		table = new TableView<Song>();
-		table.setMaxSize(450.0, 600.0);
-		table.setPrefSize(450.0, 600.0);
+		searchTable = new TableView<Song>();
+		searchTable.setMaxSize(450.0, 600.0);
+		searchTable.setPrefSize(450.0, 600.0);
 		
 		TableColumn<Song, String> songCol = new TableColumn <Song, String>("Song");
 		songCol.setMinWidth(450.0/3.0);
@@ -754,54 +894,56 @@ public class Main extends Application {
         albumCol.setCellValueFactory(new PropertyValueFactory<Song, String>("album"));
         albumCol.setCellFactory(new ImageCellFactory());
         
-        table.setItems(buildSongList());
-        table.getColumns().addAll(songCol, artistCol, albumCol);
-        table.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
+        searchTable.setItems(songlist);
+        searchTable.getColumns().addAll(songCol, artistCol, albumCol);
+        searchTable.setBorder(new Border(new BorderStroke(Color.BLACK, BorderStrokeStyle.SOLID, CornerRadii.EMPTY, BorderWidths.DEFAULT)));
 		
-		return table;
+		return searchTable;
 	}
 
-	private final class ImageCellFactory
-		implements Callback<TableColumn<Song, String>,
-							TableCell<Song, String>>
-	{
+	/* Help facilite the updating of the search table.
+	 * Written by Stephen Cain
+	 */
+	private final class ImageCellFactory implements Callback<TableColumn<Song, String>, TableCell<Song, String>> {
 		public TableCell<Song, String>	call(TableColumn<Song, String> v)
 		{
 			return new ImageCell();
 		}
 	}
 	
-	private final class ImageCell
-	extends TableCell<Song, String>
-{
-	public void	updateItem(String value, boolean isEmpty)
-	{
-		super.updateItem(value, isEmpty);
+	/* ImageCell element of the search table.
+	 * Written by Stephen Cain
+	 */
+	private final class ImageCell extends TableCell<Song, String> {
+		public void	updateItem(String value, boolean isEmpty) {
+			super.updateItem(value, isEmpty);
 
-		if (isEmpty || (value == null))
-		{
-			setGraphic(null);
-			setAlignment(Pos.CENTER);
+			if (isEmpty || (value == null)) {
+				setGraphic(null);
+				setAlignment(Pos.CENTER);
 
-			return;
-		}
+				return;
+			}
 		
-		ImageView	image = createFXIcon(value, 100, 100);
+			ImageView	image = createFXIcon(value, 100, 100);
 
-		setGraphic(image);
-		setAlignment(Pos.CENTER);
+			setGraphic(image);
+			setAlignment(Pos.CENTER);
+		}
+	
+		public ImageView	createFXIcon(String url, double w, double h) {
+			Image	image = new Image("resources/" + url, w, h, false, true);
+
+			return new ImageView(image);
+		}
 	}
 	
-	public ImageView	createFXIcon(String url, double w, double h)
-	{
-		Image	image = new Image("resources/" + url, w, h, false, true);
-
-		return new ImageView(image);
-	}
-}
-	
+	/* This method is used to build a pane that prompts the user to select a playlist to add the select song to.
+	 * Written by Stephen Cain
+	 */
 	public Node buildAddToPlaylistPane(Song song) {
 		
+		// Build a label that prompts the user to select a playlist.
 		Label addLabel = new Label("Select Playlist");
 		addLabel.setFont(new Font("arial", 32));
 		addLabel.setPrefSize(400, 75);
@@ -865,12 +1007,16 @@ public class Main extends Application {
 		return addToPlaylist;	
 	}
 	
+	/* This method will build the application's collection of songs.
+	 * Written by Stephen Cain
+	 */
 	public ObservableList<Song> buildSongList() throws IOException {
 		
 		BufferedReader input = new BufferedReader(new FileReader("src/resources/songlist.txt"));
 		
 		String songInfo;
 		
+		// Reads the text file and parses each line to construct each song as a Song object.
 		while((songInfo = input.readLine()) != null) {
 			
 			String[] songInfoArray = songInfo.split("/");
@@ -885,6 +1031,9 @@ public class Main extends Application {
 		return songlist;
 	}
 
+	/* This class help facilite the updating of the seaarch table based on the input given by the user.
+	 * Written by Stephen Cain
+	 */
 	public final class FilterPredicate
 		implements Predicate<Song>
 	{
@@ -905,84 +1054,86 @@ public class Main extends Application {
 		}
 	}
 	
-	// This action handler deals with the many inputs given by the user and properly assess the changes to the application.
+	/* This action handler deals with the many inputs given by the user and properly assess the changes to the application.
+	 * Written by Khoa-chau Nguyen
+	 */
 	private final class ActionHandler implements EventHandler<ActionEvent> {
 		public void handle(ActionEvent e) {
 			Object source = e.getSource();
 			
 			// If the user selects the browse button on the navigation bar, the application will change to the browse pane.
-			if (source == browseButton) { 
+			if (source == navBarBrowse) { 
 				System.out.println("User selected: Browse");
 				
-				root.setCenter(browsePane);
+				root.setCenter(paneBrowse);
 			}
 			
 			// If the user selects the library button on the navigation bar, the application will change to the library pane.
-			else if (source == libraryButton) {
+			else if (source == navBarLibrary) {
 				System.out.println("User selected: Library");
 				
-				root.setCenter(libraryPane);
+				root.setCenter(paneLibrary);
 			}
 			
 			// If the user selects the search button on the navigation bar, the application will change to the search pane.
 			else if (source == searchButton) {
 				System.out.println("User selected: Search");
 				
-				table.getSelectionModel().clearSelection();
+				searchTable.getSelectionModel().clearSelection();
 				searchBox.clear();
 				updateFilter();
 				
-				root.setCenter(searchPane);
+				root.setCenter(paneSearch);
 			}
 			
 			// If the user selects the settings button on the navigation bar, the application will change to the settings pane.
 			else if (source == settingsButton) {
 				System.out.println("User selected: Settings");
 				
-				root.setCenter(settingsPane);
+				root.setCenter(paneSettings);
 			}
 			
 			// If the user selects the button to add a new playlist in their library, the application will change to the pane where the user can create a new playlist..
-			else if (source == addPlayListButton) {
+			else if (source == createPlaylistButton) {
 				System.out.println("Open create playlist pane.");
 				
-				root.setCenter(newPlaylistPane);
+				root.setCenter(paneCreatePlaylist);
 			}
 			
 			// If the user selects the back button, the application will change back to the library pane.
 			else if (source == backToLibrary) {
 				System.out.println("User selected: Library");
 				
-				root.setCenter(libraryPane);
+				root.setCenter(paneLibrary);
 			}
 			
 			// If the user selects the submit button, the application will read the text input and create a new playlist with that name.
-			else if (source == newPLSubmit) {
+			else if (source == createPlaylistSubmitButton) {
 				System.out.println("Creating new playlist.");
 				
 				Playlist tempPL = new Playlist();
 				
-				tempPL.setName(newPLTextfield.getText());
+				tempPL.setName(createPlaylistTextfield.getText());
 				
 				playlistList.add(tempPL);
 				
 				System.out.print(playlistList.get(2).getPLName());
 				
-				libraryPane = buildLibraryPane();
+				paneLibrary = buildLibraryPane();
 				
-				root.setCenter(libraryPane);
+				root.setCenter(paneLibrary);
 			}
 			
 			// If the user selects the back button, the application will change back to the playlist pane.
 			else if (source == backToPlaylist) {
 				System.out.println("Return to playlsit from song.");
 				
-				root.setCenter(playListPane);
+				root.setCenter(panePlaylist);
 			}
 			
 			// If the user selects the back button, the application will change back to the browse pane.
 			else if (source == backToBrowse) {
-				root.setCenter(browsePane);
+				root.setCenter(paneBrowse);
 			}
 			
 			// If the user selects the play button on the song pane, the application will assign the song's audio file to the player.
@@ -1003,7 +1154,10 @@ public class Main extends Application {
 					}
 				});
 				
-				if (mediaplayer.getStatus() != Status.PLAYING) {
+				if (mediaplayer.getStatus() == Status.PLAYING) {
+					mediaplayer.pause();
+				}
+				else {
 					mediaplayer.play();
 				}
 			}
@@ -1097,13 +1251,13 @@ public class Main extends Application {
 			
 			// If the user selects the sheet music button on the song pane, the application will open the sheet music for the song.
 			else if (source == songSheetMusic) {
-				songSheetMusicPane = buildSongSheetMusicPane(selectedSong);
+				paneSongSheetMusicView = buildSongSheetMusicPane(selectedSong);
 				
-				root.setCenter(songSheetMusicPane);
+				root.setCenter(paneSongSheetMusicView);
 			}
 			
 			// Updates the search table for the user when utilziing the search function.
-			else if (source == searchBox || source == goButton) {	
+			else if (source == searchBox || source == searchGoButton) {	
 				updateFilter();
 			}
 			
@@ -1113,7 +1267,7 @@ public class Main extends Application {
 			}
 			
 			// If the user selects the Log Out button, the application sign the user out and save their library in txt document format.
-			else if (source == logOut) {
+			else if (source == settingsLogOut) {
 				try {
 					savePlayList("src/resources/playlist.txt");
 				} catch (IOException e1) {
@@ -1130,16 +1284,20 @@ public class Main extends Application {
 		}
 	}
 	
-	// This method is used to udpate the table of the search pane.
+	/* This method is used to udpate the table of the search pane.
+	 * Written by Stephen Cain
+	 */
 	private void	updateFilter()
 	{
 	
 		Predicate<Song>		predicate = new FilterPredicate();
 
-		table.setItems(new FilteredList<Song>(songlist, predicate));
+		searchTable.setItems(new FilteredList<Song>(songlist, predicate));
 	}
 	
-	// This method is used to load in any of the user's existing playlists.
+	/* This method is used to load in any of the user's existing playlists.
+	 * Written by Khoa-chau Nguyen
+	 */
 	public ArrayList<Playlist> loadPlayList(String filename) throws IOException {
 		
 		/* The first line of the text file will consist of the number of playlist.
@@ -1195,7 +1353,9 @@ public class Main extends Application {
 		return playlistList;
 	}
 	
-	// This method is used to save the user's playlist when they log out of the application.
+	/* This method is used to save the user's playlist when they log out of the application.
+	 * Written by Khoa-chau Nguyen
+	 */
 	public void savePlayList(String filename) throws IOException {
 		BufferedWriter writer = new BufferedWriter(new FileWriter(filename));
 		
@@ -1210,7 +1370,7 @@ public class Main extends Application {
 			for (int j = 0; j < playlistList.get(i).size(); j++) {
 				Song song = playlistList.get(i).getSong(j);
 				
-				writer.write(song.getName() + "/" + song.getArtist() + "/" + Integer.toString(song.getRuntime()) + "/" + song.getGenre() + "/" + song.getAlbum() + "/" + song.getSheetMusic());
+				writer.write(song.getName() + "/" + song.getArtist() + "/" + Integer.toString(song.getRuntime()) + "/" + song.getGenre() + "/" + song.getAlbum() + "/" + song.getSheetMusic() + "/" + song.getAudioFile());
 				writer.newLine();
 			}
 			writer.write("/");
@@ -1221,7 +1381,9 @@ public class Main extends Application {
 		
 	}
 
-	// This method is called on by slider to display the progress of the playing song.
+	/* This method is called on by slider to display the progress of the playing song.
+	 * Written by Khoa-chau Nguyen
+	 */
 	public void updateValues() {
 		Platform.runLater(new Runnable() {
 			public void run() {
